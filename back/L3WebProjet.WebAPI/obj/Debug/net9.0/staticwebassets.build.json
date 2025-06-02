@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "qYbmtEpHFNoyDck18zv5kZk8lsHeFVRH6aDvQg8NWfg=",
+  "Source": "L3WebProjet.WebAPI",
+  "BasePath": "_content/L3WebProjet.WebAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
