@@ -1,4 +1,7 @@
 using Swashbuckle.AspNetCore.SwaggerUI;
+using Microsoft.EntityFrameworkCore;
+using L3WebProjet.DataAccess;
+using L3WebProjet.DataAccess.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +9,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+
+builder.Configuration
+    .AddUserSecrets<Program>(true)
+    .Build();
+
+builder.Services.AddDbContext<VideoclubDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Videoclub")));
 
 var app = builder.Build();
 
@@ -26,5 +36,10 @@ app.UseSwaggerUI(options => {
         Url = "/openapi/v1.json"
     }];
 });
+
+using (var scope = app.Services.CreateScope()) {
+    var dbContext = scope.ServiceProvider.GetRequiredService<VideoclubDbContext>();
+    dbContext.Database.Migrate();
+}
 
 app.Run();

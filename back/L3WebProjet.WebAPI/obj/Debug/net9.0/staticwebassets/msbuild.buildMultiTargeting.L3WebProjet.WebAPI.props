@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="../build/L3WebProjet.WebAPI.props" />
-</Project>
