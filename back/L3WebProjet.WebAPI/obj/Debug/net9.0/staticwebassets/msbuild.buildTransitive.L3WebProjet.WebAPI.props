@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="../buildMultiTargeting/L3WebProjet.WebAPI.props" />
-</Project>
