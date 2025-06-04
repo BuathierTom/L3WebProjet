@@ -17,41 +17,42 @@ namespace L3WebProjet.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetAll()
+        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
-            var users = await _userService.GetAllUsersAsync();
+            var users = await _userService.GetAllUsersAsync(cancellationToken);
             return Ok(users);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<UserDto>> GetById(Guid id)
+        public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
         {
-            var user = await _userService.GetUserByIdAsync(id);
+            var user = await _userService.GetUserByIdAsync(id, cancellationToken);
             return user is null ? NotFound() : Ok(user);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(UserCreateRequest request)
+        public async Task<IActionResult> Create(UserCreateRequest request, CancellationToken cancellationToken)
         {
-            var user = new UserDto { Id = Guid.NewGuid(), Pseudo = request.Pseudo };
-            await _userService.CreateUserAsync(request);
-            return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
+            var createdUser = await _userService.CreateUserAsync(request, cancellationToken);
+            return CreatedAtAction(nameof(GetById), new { id = createdUser.Id }, createdUser);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, UserUpdateRequest request)
+        public async Task<IActionResult> Update(Guid id, UserUpdateRequest request, CancellationToken cancellationToken)
         {
-            if (id != request.Id) return BadRequest("ID mismatch between URL and body");
-            var user = new UserDto { Id = request.Id, Pseudo = request.Pseudo };
-            await _userService.UpdateUserAsync(request);
+            if (id != request.Id)
+                return BadRequest("ID mismatch");
+
+            await _userService.UpdateUserAsync(request, cancellationToken);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {
-            await _userService.DeleteUserAsync(id);
+            await _userService.DeleteUserAsync(id, cancellationToken);
             return NoContent();
         }
+
     }
 }
