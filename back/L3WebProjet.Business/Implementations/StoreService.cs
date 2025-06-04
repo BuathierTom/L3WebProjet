@@ -1,6 +1,7 @@
 using L3WebProjet.Business.Interfaces;
 using L3WebProjet.Common.DTO;
 using L3WebProjet.DataAccess.Interfaces;
+using L3WebProjet.Common.Request;
 
 namespace L3WebProjet.Business.Implementations
 {
@@ -17,30 +18,51 @@ namespace L3WebProjet.Business.Implementations
         {
             return await _storeRepository.GetAllAsync();
         }
-
-        public async Task<StoreDto?> GetStoreByIdAsync(Guid id)
+        
+        public async Task<IEnumerable<StoreDto>> GetAllStoresAsync(CancellationToken cancellationToken = default)
         {
-            return await _storeRepository.GetByIdAsync(id);
+            return await _storeRepository.GetAllAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<StoreDto>> GetStoresByUserIdAsync(Guid userId)
+        public async Task<StoreDto?> GetStoreByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await _storeRepository.GetByUserIdAsync(userId);
+            return await _storeRepository.GetByIdAsync(id, cancellationToken);
         }
 
-        public async Task CreateStoreAsync(StoreDto store)
+        public async Task<IEnumerable<StoreDto>> GetStoresByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
         {
-            await _storeRepository.AddAsync(store);
+            return await _storeRepository.GetByUserIdAsync(userId, cancellationToken);
         }
 
-        public async Task UpdateStoreAsync(StoreDto store)
+        public async Task<StoreDto> CreateStoreAsync(StoreCreateRequest request, CancellationToken cancellationToken = default)
         {
-            await _storeRepository.UpdateAsync(store);
+            var store = new StoreDto
+            {
+                Id = Guid.NewGuid(),
+                Name = request.Name,
+                CreatedAt = DateTime.UtcNow,
+                UserId = request.UserId
+            };
+
+            await _storeRepository.AddAsync(store, cancellationToken);
+            return store;
         }
 
-        public async Task DeleteStoreAsync(Guid id)
+        public async Task UpdateStoreAsync(StoreUpdateRequest request, CancellationToken cancellationToken = default)
         {
-            await _storeRepository.DeleteAsync(id);
+            var store = new StoreDto
+            {
+                Id = request.Id,
+                Name = request.Name,
+                UserId = request.UserId
+            };
+
+            await _storeRepository.UpdateAsync(store, cancellationToken);
+        }
+
+        public async Task DeleteStoreAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            await _storeRepository.DeleteAsync(id, cancellationToken);
         }
 
     }
