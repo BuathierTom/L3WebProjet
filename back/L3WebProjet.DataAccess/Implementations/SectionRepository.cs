@@ -28,5 +28,12 @@ namespace L3WebProjet.DataAccess.Implementations
             await _context.Sections.AddAsync(section);
             await _context.SaveChangesAsync();
         }
+        
+        public async Task<IEnumerable<SectionDto>> GetByStoreIdAsync(Guid storeId)
+        {
+            return await _context.Sections
+                .Where(s => s.StoreId == storeId)
+                .ToListAsync();
+        }
     }
 }
