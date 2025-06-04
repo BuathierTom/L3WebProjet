@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\L3WebProjet.Common\L3WebProjet.Common.csproj" />
+      <ProjectReference Include="..\L3WebProjet.DataAccess\L3WebProjet.DataAccess.csproj" />
+    </ItemGroup>
+
+</Project>
