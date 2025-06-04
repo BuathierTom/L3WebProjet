@@ -52,8 +52,6 @@ namespace L3WebProjet.Business.Implementations
                 Id = request.Id,
                 Type = request.Type,
                 Level = request.Level,
-                IsUnderConstruction = request.IsUnderConstruction,
-                ConstructionEnd = request.ConstructionEnd,
                 StoreId = request.StoreId
             };
 
