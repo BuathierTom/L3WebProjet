@@ -13,37 +13,37 @@ namespace L3WebProjet.Business.Implementations
         {
             _resourceRepository = resourceRepository;
         }
-
-        public async Task<IEnumerable<ResourceDto>> GetAllResourcesAsync()
+    
+        public async Task<IEnumerable<ResourceDto>> GetAllResourcesAsync(CancellationToken cancellationToken = default)
         {
-            return await _resourceRepository.GetAllAsync();
+            return await _resourceRepository.GetAllAsync(cancellationToken);
         }
 
-        public async Task<ResourceDto?> GetResourceByIdAsync(Guid id)
+        public async Task<ResourceDto?> GetResourceByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await _resourceRepository.GetByIdAsync(id);
+            return await _resourceRepository.GetByIdAsync(id, cancellationToken);
         }
 
-        public async Task<IEnumerable<ResourceDto>> GetResourcesByStoreIdAsync(Guid storeId)
+        public async Task<IEnumerable<ResourceDto>> GetResourcesByStoreIdAsync(Guid storeId, CancellationToken cancellationToken = default)
         {
-            return await _resourceRepository.GetByStoreIdAsync(storeId);
+            return await _resourceRepository.GetByStoreIdAsync(storeId, cancellationToken);
         }
 
-        public async Task<ResourceDto> CreateResourceAsync(ResourceCreateRequest request)
+        public async Task<ResourceDto> CreateResourceAsync(ResourceCreateRequest request, CancellationToken cancellationToken = default)
         {
             var resource = new ResourceDto
             {
                 Id = Guid.NewGuid(),
-                Type = request.Type, 
-                Amount= request.Amount,
+                Type = request.Type,
+                Amount = request.Amount,
                 StoreId = request.StoreId
             };
 
-            await _resourceRepository.AddAsync(resource);
+            await _resourceRepository.AddAsync(resource, cancellationToken);
             return resource;
         }
 
-        public async Task UpdateResourceAsync(ResourceUpdateRequest request)
+        public async Task UpdateResourceAsync(ResourceUpdateRequest request, CancellationToken cancellationToken = default)
         {
             var resource = new ResourceDto
             {
@@ -53,12 +53,12 @@ namespace L3WebProjet.Business.Implementations
                 StoreId = request.StoreId
             };
 
-            await _resourceRepository.UpdateAsync(resource);
+            await _resourceRepository.UpdateAsync(resource, cancellationToken);
         }
 
-        public async Task DeleteResourceAsync(Guid id)
+        public async Task DeleteResourceAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            await _resourceRepository.DeleteAsync(id);
+            await _resourceRepository.DeleteAsync(id, cancellationToken);
         }
 
     }

@@ -17,45 +17,47 @@ namespace L3WebProjet.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ResourceDto>>> GetAll()
+        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
-            var resources = await _resourceService.GetAllResourcesAsync();
+            var resources = await _resourceService.GetAllResourcesAsync(cancellationToken);
             return Ok(resources);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<ResourceDto>> GetById(Guid id)
+        public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
         {
-            var resource = await _resourceService.GetResourceByIdAsync(id);
+            var resource = await _resourceService.GetResourceByIdAsync(id, cancellationToken);
             return resource is null ? NotFound() : Ok(resource);
         }
 
         [HttpGet("store/{storeId}")]
-        public async Task<ActionResult<IEnumerable<ResourceDto>>> GetByStore(Guid storeId)
+        public async Task<IActionResult> GetByStoreId(Guid storeId, CancellationToken cancellationToken)
         {
-            var resources = await _resourceService.GetResourcesByStoreIdAsync(storeId);
+            var resources = await _resourceService.GetResourcesByStoreIdAsync(storeId, cancellationToken);
             return Ok(resources);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(ResourceCreateRequest request)
+        public async Task<IActionResult> Create(ResourceCreateRequest request, CancellationToken cancellationToken)
         {
-            var resource = await _resourceService.CreateResourceAsync(request);
-            return CreatedAtAction(nameof(GetById), new { id = resource.Id }, resource);
+            var created = await _resourceService.CreateResourceAsync(request, cancellationToken);
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, ResourceUpdateRequest request)
+        public async Task<IActionResult> Update(Guid id, ResourceUpdateRequest request, CancellationToken cancellationToken)
         {
-            if (id != request.Id) return BadRequest("ID mismatch between URL and body");
-            await _resourceService.UpdateResourceAsync(request);
+            if (id != request.Id)
+                return BadRequest("ID mismatch");
+
+            await _resourceService.UpdateResourceAsync(request, cancellationToken);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {
-            await _resourceService.DeleteResourceAsync(id);
+            await _resourceService.DeleteResourceAsync(id, cancellationToken);
             return NoContent();
         }
     }
