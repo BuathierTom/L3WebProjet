@@ -13,44 +13,45 @@ namespace L3WebProjet.DataAccess.Implementations
             _context = context;
         }
 
-        public async Task<IEnumerable<SectionDto>> GetAllAsync()
+        public async Task<IEnumerable<SectionDto>> GetAllAsync(CancellationToken cancellationToken = default)
         {
-            return await _context.Sections.ToListAsync();
+            return await _context.Sections.ToListAsync(cancellationToken);
         }
 
-        public async Task<SectionDto?> GetByIdAsync(Guid id)
+        public async Task<SectionDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await _context.Sections.FindAsync(id);
+            return await _context.Sections.FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
         }
 
-        public async Task AddAsync(SectionDto section)
-        {
-            await _context.Sections.AddAsync(section);
-            await _context.SaveChangesAsync();
-        }
-        
-        public async Task<IEnumerable<SectionDto>> GetByStoreIdAsync(Guid storeId)
+        public async Task<IEnumerable<SectionDto>> GetByStoreIdAsync(Guid storeId, CancellationToken cancellationToken = default)
         {
             return await _context.Sections
                 .Where(s => s.StoreId == storeId)
-                .ToListAsync();
-        }
-        
-        public async Task UpdateAsync(SectionDto section)
-        {
-            _context.Sections.Update(section);
-            await _context.SaveChangesAsync();
+                .ToListAsync(cancellationToken);
         }
 
-        public async Task DeleteAsync(Guid id)
+        public async Task AddAsync(SectionDto section, CancellationToken cancellationToken = default)
         {
-            var section = await _context.Sections.FindAsync(id);
+            await _context.Sections.AddAsync(section, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task UpdateAsync(SectionDto section, CancellationToken cancellationToken = default)
+        {
+            _context.Sections.Update(section);
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken = default)
+        {
+            var section = await _context.Sections.FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
             if (section != null)
             {
                 _context.Sections.Remove(section);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(cancellationToken);
             }
         }
+
 
     }
 }

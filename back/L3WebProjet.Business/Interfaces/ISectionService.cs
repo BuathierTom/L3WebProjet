@@ -5,11 +5,11 @@ namespace L3WebProjet.Business.Interfaces
 {
     public interface ISectionService
     {
-        Task<IEnumerable<SectionDto>> GetAllSectionsAsync();
-        Task<SectionDto?> GetSectionByIdAsync(Guid id);
-        Task<IEnumerable<SectionDto>> GetSectionsByStoreIdAsync(Guid storeId);
-        Task<SectionDto> CreateSectionAsync(SectionCreateRequest request);
-        Task UpdateSectionAsync(SectionUpdateRequest request);
-        Task DeleteSectionAsync(Guid id);
+        Task<IEnumerable<SectionDto>> GetAllSectionsAsync(CancellationToken cancellationToken = default);
+        Task<SectionDto?> GetSectionByIdAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<IEnumerable<SectionDto>> GetSectionsByStoreIdAsync(Guid storeId, CancellationToken cancellationToken = default);
+        Task<SectionDto> CreateSectionAsync(SectionCreateRequest request, CancellationToken cancellationToken = default);
+        Task UpdateSectionAsync(SectionUpdateRequest request, CancellationToken cancellationToken = default);
+        Task DeleteSectionAsync(Guid id, CancellationToken cancellationToken = default);
     }
 }
