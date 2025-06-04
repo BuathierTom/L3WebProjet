@@ -1,6 +1,7 @@
 using L3WebProjet.Business.Interfaces;
 using L3WebProjet.Common.DTO;
 using L3WebProjet.DataAccess.Interfaces;
+using L3WebProjet.Common.Request;
 
 namespace L3WebProjet.Business.Implementations
 {
@@ -27,14 +28,16 @@ namespace L3WebProjet.Business.Implementations
         {
             return await _storeRepository.GetByUserIdAsync(userId);
         }
-
-        public async Task CreateStoreAsync(StoreDto store)
+        public async Task<StoreDto> CreateStoreAsync(StoreCreateRequest request)
         {
+            var store = new StoreDto { Id = Guid.NewGuid(), Name = request.Name, CreatedAt = DateTime.UtcNow, UserId = request.UserId };
             await _storeRepository.AddAsync(store);
+            return store;
         }
 
-        public async Task UpdateStoreAsync(StoreDto store)
+        public async Task UpdateStoreAsync(StoreUpdateRequest request)
         {
+            var store = new StoreDto { Id = request.Id, Name = request.Name, UserId = request.UserId };
             await _storeRepository.UpdateAsync(store);
         }
 

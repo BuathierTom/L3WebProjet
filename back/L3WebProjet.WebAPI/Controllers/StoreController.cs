@@ -1,6 +1,7 @@
 using L3WebProjet.Business.Interfaces;
 using L3WebProjet.Common.DTO;
 using Microsoft.AspNetCore.Mvc;
+using L3WebProjet.Common.Request;
 
 namespace L3WebProjet.WebAPI.Controllers
 {
@@ -37,17 +38,17 @@ namespace L3WebProjet.WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(StoreDto store)
+        public async Task<IActionResult> Create(StoreCreateRequest request)
         {
-            await _storeService.CreateStoreAsync(store);
+            var store = await _storeService.CreateStoreAsync(request);
             return CreatedAtAction(nameof(GetById), new { id = store.Id }, store);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, StoreDto store)
+        public async Task<IActionResult> Update(Guid id, StoreUpdateRequest request)
         {
-            if (id != store.Id) return BadRequest();
-            await _storeService.UpdateStoreAsync(store);
+            if (id != request.Id) return BadRequest("ID mismatch between URL and body");
+            await _storeService.UpdateStoreAsync(request);
             return NoContent();
         }
 
