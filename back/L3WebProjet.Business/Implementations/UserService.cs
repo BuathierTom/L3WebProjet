@@ -30,12 +30,13 @@ namespace L3WebProjet.Business.Implementations
 
         public async Task UpdateUserAsync(UserDto user)
         {
-            throw new NotImplementedException();
+            await _userRepository.UpdateAsync(user);
         }
 
         public async Task DeleteUserAsync(Guid id)
         {
-            throw new NotImplementedException();
+            await _userRepository.DeleteAsync(id);
         }
+
     }
 }
