@@ -35,5 +35,21 @@ namespace L3WebProjet.DataAccess.Implementations
                 .Where(s => s.UserId == userId)
                 .ToListAsync();
         }
+        public async Task UpdateAsync(StoreDto store)
+        {
+            _context.Stores.Update(store);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(Guid id)
+        {
+            var store = await _context.Stores.FindAsync(id);
+            if (store != null)
+            {
+                _context.Stores.Remove(store);
+                await _context.SaveChangesAsync();
+            }
+        }
+
     }
 }

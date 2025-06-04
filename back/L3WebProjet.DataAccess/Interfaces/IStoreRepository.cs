@@ -8,5 +8,7 @@ namespace L3WebProjet.DataAccess.Interfaces
         Task<StoreDto?> GetByIdAsync(Guid id);
         Task AddAsync(StoreDto store);
         Task<IEnumerable<StoreDto>> GetByUserIdAsync(Guid userId);
+        Task UpdateAsync(StoreDto store);
+        Task DeleteAsync(Guid id);
     }
 }

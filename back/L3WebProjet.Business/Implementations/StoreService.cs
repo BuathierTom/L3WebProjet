@@ -35,12 +35,13 @@ namespace L3WebProjet.Business.Implementations
 
         public async Task UpdateStoreAsync(StoreDto store)
         {
-            throw new NotImplementedException();
+            await _storeRepository.UpdateAsync(store);
         }
 
         public async Task DeleteStoreAsync(Guid id)
         {
-            throw new NotImplementedException();
+            await _storeRepository.DeleteAsync(id);
         }
+
     }
 }
