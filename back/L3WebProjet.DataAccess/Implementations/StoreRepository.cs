@@ -28,5 +28,12 @@ namespace L3WebProjet.DataAccess.Implementations
             await _context.Stores.AddAsync(store);
             await _context.SaveChangesAsync();
         }
+        
+        public async Task<IEnumerable<StoreDto>> GetByUserIdAsync(Guid userId)
+        {
+            return await _context.Stores
+                .Where(s => s.UserId == userId)
+                .ToListAsync();
+        }
     }
 }
