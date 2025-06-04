@@ -1,4 +1,5 @@
 using L3WebProjet.Common.DTO;
+using L3WebProjet.Common.Request;
 
 namespace L3WebProjet.Business.Interfaces
 {
@@ -7,8 +8,8 @@ namespace L3WebProjet.Business.Interfaces
         Task<IEnumerable<SectionDto>> GetAllSectionsAsync();
         Task<SectionDto?> GetSectionByIdAsync(Guid id);
         Task<IEnumerable<SectionDto>> GetSectionsByStoreIdAsync(Guid storeId);
-        Task CreateSectionAsync(SectionDto section);
-        Task UpdateSectionAsync(SectionDto section);
+        Task<SectionDto> CreateSectionAsync(SectionCreateRequest request);
+        Task UpdateSectionAsync(SectionUpdateRequest request);
         Task DeleteSectionAsync(Guid id);
     }
 }

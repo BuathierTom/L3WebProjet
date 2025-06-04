@@ -1,6 +1,7 @@
 using L3WebProjet.Business.Interfaces;
 using L3WebProjet.Common.DTO;
 using Microsoft.AspNetCore.Mvc;
+using L3WebProjet.Common.Request;
 
 namespace L3WebProjet.WebAPI.Controllers
 {
@@ -37,17 +38,17 @@ namespace L3WebProjet.WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(SectionDto section)
+        public async Task<IActionResult> Create(SectionCreateRequest request)
         {
-            await _sectionService.CreateSectionAsync(section);
+            var section = await _sectionService.CreateSectionAsync(request);
             return CreatedAtAction(nameof(GetById), new { id = section.Id }, section);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, SectionDto section)
+        public async Task<IActionResult> Update(Guid id, SectionUpdateRequest request)
         {
-            if (id != section.Id) return BadRequest();
-            await _sectionService.UpdateSectionAsync(section);
+            if (id != request.Id) return BadRequest("ID mismatch between URL and body");
+            await _sectionService.UpdateSectionAsync(request);
             return NoContent();
         }
 
