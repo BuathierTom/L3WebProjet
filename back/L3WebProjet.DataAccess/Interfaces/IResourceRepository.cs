@@ -8,5 +8,8 @@ namespace L3WebProjet.DataAccess.Interfaces
         Task<ResourceDto?> GetByIdAsync(Guid id);
         Task AddAsync(ResourceDto resource);
         Task<IEnumerable<ResourceDto>> GetByStoreIdAsync(Guid storeId);
+        Task UpdateAsync(ResourceDto resource);
+        Task DeleteAsync(Guid id);
+
     }
 }
