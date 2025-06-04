@@ -1,6 +1,7 @@
 using L3WebProjet.Business.Interfaces;
 using L3WebProjet.Common.DTO;
 using L3WebProjet.DataAccess.Interfaces;
+using L3WebProjet.Common.Request;
 
 namespace L3WebProjet.Business.Implementations
 {
@@ -23,14 +24,16 @@ namespace L3WebProjet.Business.Implementations
             return await _userRepository.GetByIdAsync(id);
         }
 
-        public async Task CreateUserAsync(UserDto user)
+        public async Task CreateUserAsync(UserCreateRequest request)
         {
-            await _userRepository.AddAsync(user);
+            var dto = new UserDto { Id = Guid.NewGuid(), Pseudo = request.Pseudo };
+            await _userRepository.AddAsync(dto);
         }
 
-        public async Task UpdateUserAsync(UserDto user)
+        public async Task UpdateUserAsync(UserUpdateRequest request)
         {
-            await _userRepository.UpdateAsync(user);
+            var dto = new UserDto { Id = request.Id, Pseudo = request.Pseudo };
+            await _userRepository.UpdateAsync(dto);
         }
 
         public async Task DeleteUserAsync(Guid id)

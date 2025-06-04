@@ -1,6 +1,7 @@
 using L3WebProjet.Business.Interfaces;
 using L3WebProjet.Common.DTO;
 using Microsoft.AspNetCore.Mvc;
+using L3WebProjet.Common.Request;
 
 namespace L3WebProjet.WebAPI.Controllers
 {
@@ -30,17 +31,19 @@ namespace L3WebProjet.WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(UserDto user)
+        public async Task<IActionResult> Create(UserCreateRequest request)
         {
-            await _userService.CreateUserAsync(user);
+            var user = new UserDto { Id = Guid.NewGuid(), Pseudo = request.Pseudo };
+            await _userService.CreateUserAsync(request);
             return CreatedAtAction(nameof(GetById), new { id = user.Id }, user);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, UserDto user)
+        public async Task<IActionResult> Update(Guid id, UserUpdateRequest request)
         {
-            if (id != user.Id) return BadRequest();
-            await _userService.UpdateUserAsync(user);
+            if (id != request.Id) return BadRequest("ID mismatch between URL and body");
+            var user = new UserDto { Id = request.Id, Pseudo = request.Pseudo };
+            await _userService.UpdateUserAsync(request);
             return NoContent();
         }
 
