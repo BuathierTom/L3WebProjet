@@ -35,12 +35,13 @@ namespace L3WebProjet.Business.Implementations
 
         public async Task UpdateResourceAsync(ResourceDto resource)
         {
-            throw new NotImplementedException();
+            await _resourceRepository.UpdateAsync(resource);
         }
 
         public async Task DeleteResourceAsync(Guid id)
         {
-            throw new NotImplementedException();
+            await _resourceRepository.DeleteAsync(id);
         }
+
     }
 }
