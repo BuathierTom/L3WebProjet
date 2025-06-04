@@ -18,6 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\L3WebProjet.Business\L3WebProjet.Business.csproj" />
       <ProjectReference Include="..\L3WebProjet.DataAccess\L3WebProjet.DataAccess.csproj" />
     </ItemGroup>
 
