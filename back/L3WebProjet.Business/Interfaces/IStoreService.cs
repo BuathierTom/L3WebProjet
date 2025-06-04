@@ -5,11 +5,11 @@ namespace L3WebProjet.Business.Interfaces
 {
     public interface IStoreService
     {
-        Task<IEnumerable<StoreDto>> GetAllStoresAsync();
-        Task<StoreDto?> GetStoreByIdAsync(Guid id);
-        Task<IEnumerable<StoreDto>> GetStoresByUserIdAsync(Guid userId);
-        Task<StoreDto> CreateStoreAsync(StoreCreateRequest request);
-        Task UpdateStoreAsync(StoreUpdateRequest request);
-        Task DeleteStoreAsync(Guid id);
+        Task<IEnumerable<StoreDto>> GetAllStoresAsync(CancellationToken cancellationToken = default);
+        Task<StoreDto?> GetStoreByIdAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<IEnumerable<StoreDto>> GetStoresByUserIdAsync(Guid userId, CancellationToken cancellationToken = default);
+        Task<StoreDto> CreateStoreAsync(StoreCreateRequest request, CancellationToken cancellationToken = default);
+        Task UpdateStoreAsync(StoreUpdateRequest request, CancellationToken cancellationToken = default);
+        Task DeleteStoreAsync(Guid id, CancellationToken cancellationToken = default);
     }
 }
