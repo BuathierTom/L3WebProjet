@@ -35,12 +35,13 @@ namespace L3WebProjet.Business.Implementations
 
         public async Task UpdateSectionAsync(SectionDto section)
         {
-            throw new NotImplementedException();
+            await _sectionRepository.UpdateAsync(section);
         }
 
         public async Task DeleteSectionAsync(Guid id)
         {
-            throw new NotImplementedException();
+            await _sectionRepository.DeleteAsync(id);
         }
+
     }
 }
