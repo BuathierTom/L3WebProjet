@@ -1,6 +1,7 @@
 using L3WebProjet.Business.Interfaces;
 using L3WebProjet.Common.DTO;
 using L3WebProjet.DataAccess.Interfaces;
+using L3WebProjet.Common.Request;
 
 namespace L3WebProjet.Business.Implementations
 {
@@ -28,13 +29,30 @@ namespace L3WebProjet.Business.Implementations
             return await _resourceRepository.GetByStoreIdAsync(storeId);
         }
 
-        public async Task CreateResourceAsync(ResourceDto resource)
+        public async Task<ResourceDto> CreateResourceAsync(ResourceCreateRequest request)
         {
+            var resource = new ResourceDto
+            {
+                Id = Guid.NewGuid(),
+                Type = request.Type, 
+                Amount= request.Amount,
+                StoreId = request.StoreId
+            };
+
             await _resourceRepository.AddAsync(resource);
+            return resource;
         }
 
-        public async Task UpdateResourceAsync(ResourceDto resource)
+        public async Task UpdateResourceAsync(ResourceUpdateRequest request)
         {
+            var resource = new ResourceDto
+            {
+                Id = request.Id,
+                Type = request.Type,
+                Amount = request.Amount,
+                StoreId = request.StoreId
+            };
+
             await _resourceRepository.UpdateAsync(resource);
         }
 

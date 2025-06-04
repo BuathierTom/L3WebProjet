@@ -1,6 +1,7 @@
 using L3WebProjet.Business.Interfaces;
 using L3WebProjet.Common.DTO;
 using Microsoft.AspNetCore.Mvc;
+using L3WebProjet.Common.Request;
 
 namespace L3WebProjet.WebAPI.Controllers
 {
@@ -37,17 +38,17 @@ namespace L3WebProjet.WebAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(ResourceDto resource)
+        public async Task<IActionResult> Create(ResourceCreateRequest request)
         {
-            await _resourceService.CreateResourceAsync(resource);
+            var resource = await _resourceService.CreateResourceAsync(request);
             return CreatedAtAction(nameof(GetById), new { id = resource.Id }, resource);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, ResourceDto resource)
+        public async Task<IActionResult> Update(Guid id, ResourceUpdateRequest request)
         {
-            if (id != resource.Id) return BadRequest();
-            await _resourceService.UpdateResourceAsync(resource);
+            if (id != request.Id) return BadRequest("ID mismatch between URL and body");
+            await _resourceService.UpdateResourceAsync(request);
             return NoContent();
         }
 
