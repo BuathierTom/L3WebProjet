@@ -1,0 +1,14 @@
+{
+  "storeId": "1234",
+  "resources": {
+    "money": 500,
+    "stock": 24,
+    "popularity": 67
+  },
+  "buildings": [
+    { "id": "1", "type": "action" },
+    { "id": "2", "type": "horreur" },
+    { "id": "3", "type": "comedie" },
+    { "id": "4", "type": "scifi" }
+  ]
+}
