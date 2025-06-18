@@ -10,12 +10,14 @@ namespace L3WebProjet.Business.Implementations
         private readonly IUserRepository _userRepository;
         private readonly IStoreRepository _storeRepository;
         private readonly IResourceRepository _resourceRepository;
+        private readonly ISectionRepository _sectionRepository;
         
-        public UserService(IUserRepository userRepository, IStoreRepository storeRepository, IResourceRepository resourceRepository)
+        public UserService(IUserRepository userRepository, IStoreRepository storeRepository, IResourceRepository resourceRepository, ISectionRepository sectionRepository)
         {
             _userRepository = userRepository;
             _storeRepository = storeRepository;
             _resourceRepository = resourceRepository;
+            _sectionRepository = sectionRepository;
         }
 
         public async Task<IEnumerable<UserDto>> GetAllUsersAsync(CancellationToken cancellationToken = default)
@@ -85,6 +87,19 @@ namespace L3WebProjet.Business.Implementations
             {
                 await _resourceRepository.AddAsync(resource, cancellationToken);
             }
+            
+            var defaultSection = new SectionDto
+            {
+                Id = Guid.NewGuid(),
+                Type = "Comédie",
+                Level = 1,
+                IsUnderConstruction = false,
+                ConstructionEnd = null,
+                StoreId = store.Id
+            };
+
+            await _sectionRepository.AddAsync(defaultSection, cancellationToken);
+
 
             return user;
         }

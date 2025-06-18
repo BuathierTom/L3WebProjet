@@ -11,5 +11,6 @@ namespace L3WebProjet.Business.Interfaces
         Task<ResourceDto> CreateResourceAsync(ResourceCreateRequest request, CancellationToken cancellationToken = default);
         Task UpdateResourceAsync(ResourceUpdateRequest request, CancellationToken cancellationToken = default);
         Task DeleteResourceAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<int> CalculateMoneyAsync(Guid storeId, CancellationToken cancellationToken = default);
     }
 }

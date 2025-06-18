@@ -60,5 +60,12 @@ namespace L3WebProjet.WebAPI.Controllers
             await _resourceService.DeleteResourceAsync(id, cancellationToken);
             return NoContent();
         }
+        
+        [HttpPost("calculate/{storeId}")]
+        public async Task<IActionResult> Calculate(Guid storeId, CancellationToken cancellationToken)
+        {
+            var result = await _resourceService.CalculateMoneyAsync(storeId, cancellationToken);
+            return Ok(new { total = result });
+        }
     }
 }

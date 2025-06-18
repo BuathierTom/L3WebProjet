@@ -7,7 +7,6 @@ namespace L3WebProjet.Common.DTO
         public int Level { get; set; }
         public bool IsUnderConstruction { get; set; }
         public DateTime? ConstructionEnd { get; set; }
-
         public Guid StoreId { get; set; }
     }
 }
