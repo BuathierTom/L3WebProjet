@@ -53,6 +53,13 @@ namespace L3WebProjet.WebAPI.Controllers
             await _userService.DeleteUserAsync(id, cancellationToken);
             return NoContent();
         }
+        
+        [HttpPost("createWithStore")]
+        public async Task<IActionResult> CreateWithStore(UserWithStoreCreateRequest request, CancellationToken cancellationToken)
+        {
+            var createdUser = await _userService.CreateUserWithStoreAsync(request, cancellationToken);
+            return CreatedAtAction(nameof(GetById), new { id = createdUser.Id }, createdUser);
+        }
 
     }
 }
