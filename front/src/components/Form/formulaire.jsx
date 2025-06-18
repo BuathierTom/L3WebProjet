@@ -20,7 +20,8 @@ export default function Formulaire() {
     setLoading(true)
     try {
       console.log('Envoi des données au backend...')
-      const result = await registerUser({ pseudo, magasin })
+      // Modification ici : on envoie storeName au lieu de magasin
+      const result = await registerUser({ pseudo, storeName: magasin })
       console.log('Inscription réussie:', result)
       navigate('/dashboard')  // ← redirection ici
     } catch (error) {

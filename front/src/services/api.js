@@ -1,7 +1,7 @@
-const API_BASE_URL = 'http://localhost:4000/api' // à adapter selon ton backend
+const API_BASE_URL = 'https://localhost:7264/api/User'
 
 export async function registerUser(data) {
-  const response = await fetch(`${API_BASE_URL}/register`, {
+  const response = await fetch(`${API_BASE_URL}/createWithStore`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
