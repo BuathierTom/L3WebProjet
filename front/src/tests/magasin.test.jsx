@@ -1,11 +1,10 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
-import Magasin from '../components/Magasin' // adapte ce chemin selon ton projet
+import Magasin from '../components/Magasin' 
 
-// Mock de fetch pour simuler l'API back
 beforeAll(() => {
   global.fetch = vi.fn((url) => {
-    if (url.includes('../data/store.json')) {
+    if (url.includes('/data/store.json')) {
       return Promise.resolve({
         ok: true,
         json: async () => ({
@@ -37,7 +36,6 @@ describe('Magasin', () => {
   it('affiche les ressources et les rayons du magasin', async () => {
     render(<Magasin />)
 
-    // Vérifie l'affichage des ressources
     await waitFor(() => {
       expect(screen.getByText((txt) => txt.includes('Argent'))).to.exist
       expect(screen.getByText((txt) => txt.includes('Stock'))).to.exist
