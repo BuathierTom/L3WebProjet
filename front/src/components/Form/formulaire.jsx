@@ -1,13 +1,15 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import '../../style/Formulaire/formulaire.css'
+import { registerUser } from '../../services/api' // à créer
 
 export default function Formulaire() {
   const [pseudo, setPseudo] = useState('')
   const [magasin, setMagasin] = useState('')
+  const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
     if (!pseudo.trim() || !magasin.trim()) {
@@ -15,10 +17,17 @@ export default function Formulaire() {
       return
     }
 
-    console.log('Pseudo :', pseudo)
-    console.log('Magasin :', magasin)
-
-    navigate('/')
+    setLoading(true)
+    try {
+      console.log('Envoi des données au backend...')
+      const result = await registerUser({ pseudo, magasin })
+      console.log('Inscription réussie:', result)
+      navigate('/dashboard')  // ← redirection ici
+    } catch (error) {
+      alert(error.message || "Erreur lors de l'inscription")
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -31,14 +40,18 @@ export default function Formulaire() {
           placeholder="Entrez votre pseudo"
           value={pseudo}
           onChange={(e) => setPseudo(e.target.value)}
+          disabled={loading}
         />
         <input
           type="text"
           placeholder="Entrez le nom du magasin"
           value={magasin}
           onChange={(e) => setMagasin(e.target.value)}
+          disabled={loading}
         />
-        <button type="submit">Valider</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Chargement...' : 'Valider'}
+        </button>
       </form>
     </div>
   )
