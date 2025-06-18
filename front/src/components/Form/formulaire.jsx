@@ -10,26 +10,30 @@ export default function Formulaire() {
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+  e.preventDefault()
 
-    if (!pseudo.trim() || !magasin.trim()) {
-      alert('Veuillez entrer un pseudo et un nom de magasin')
-      return
-    }
-
-    setLoading(true)
-    try {
-      console.log('Envoi des données au backend...')
-      // Modification ici : on envoie storeName au lieu de magasin
-      const result = await registerUser({ pseudo, storeName: magasin })
-      console.log('Inscription réussie:', result)
-      navigate('/home')  // ← redirection ici
-    } catch (error) {
-      alert(error.message || "Erreur lors de l'inscription")
-    } finally {
-      setLoading(false)
-    }
+  if (!pseudo.trim() || !magasin.trim()) {
+    alert('Veuillez entrer un pseudo et un nom de magasin')
+    return
   }
+
+  setLoading(true)
+  try {
+    const result = await registerUser({ pseudo, storeName: magasin })
+
+    // 🔐 Stocker userId et storeId dans le localStorage
+    localStorage.setItem('userId', result.userId)
+    localStorage.setItem('storeId', result.id)
+
+    console.log('Inscription réussie:', result)
+    navigate('/home')
+  } catch (error) {
+    alert(error.message || "Erreur lors de l'inscription")
+  } finally {
+    setLoading(false)
+  }
+}
+
 
   return (
     <div className="form-wrapper">

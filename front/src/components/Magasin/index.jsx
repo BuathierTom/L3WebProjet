@@ -1,41 +1,26 @@
 import React, { useEffect, useState } from "react";
-import Rayon from "../Rayon/index";
-import { fetchStore } from "../../services/services";
 
 const Magasin = () => {
-  const [buildings, setBuildings] = useState([]);
-  const [resources, setResources] = useState(null);
-  const storeId = 'test-store'; 
+  const [storeId, setStoreId] = useState(null);
+
   useEffect(() => {
-  const load = async () => {
-    try {
-      const response = await fetch("/data/store.json");
-      const data = await response.json();
-      setResources(data.resources);
-      setBuildings(data.buildings);
-    } catch (err) {
-      console.error("Erreur lors du chargement du magasin :", err);
+    // 🔁 On récupère le storeId stocké lors de l'inscription
+    const storedId = localStorage.getItem("storeId");
+    if (storedId) {
+      setStoreId(storedId);
+    } else {
+      console.warn("Aucun storeId trouvé dans le localStorage.");
     }
-  };
-
-
-
-  load();
-}, []);
+  }, []);
 
   return (
-    <div style={{ padding: "1rem" }}>
-      {resources && (
-        <div style={{ marginBottom: "1rem", fontFamily: "monospace" }}>
-          💰 Argent : {resources.money} | 📦 Stock : {resources.stock} | ✨ Popularité : {resources.popularity}
-        </div>
+    <div style={{ padding: "1rem", fontFamily: "monospace" }}>
+      <h2>🏪 Magasin</h2>
+      {storeId ? (
+        <p>🆔 ID du magasin : <strong>{storeId}</strong></p>
+      ) : (
+        <p>⏳ Chargement de l’ID du magasin...</p>
       )}
-
-      <div >
-        {buildings.map((b) => (
-          <Rayon key={b.id} type={b.type} />
-        ))}
-      </div>
     </div>
   );
 };
