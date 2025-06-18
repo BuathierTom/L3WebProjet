@@ -65,6 +65,10 @@ namespace L3WebProjet.WebAPI.Controllers
         public async Task<IActionResult> Calculate(Guid storeId, CancellationToken cancellationToken)
         {
             var result = await _resourceService.CalculateMoneyAsync(storeId, cancellationToken);
+
+            if (result < 0)
+                return BadRequest("Store or resource not found");
+
             return Ok(new { total = result });
         }
     }
