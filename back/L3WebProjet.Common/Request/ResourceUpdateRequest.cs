@@ -1,12 +1,10 @@
-namespace L3WebProjet.Common.DTO
+namespace L3WebProjet.Common.Request
 {
-    public class ResourceDto
+    public class ResourceUpdateRequest
     {
         public Guid Id { get; set; }
         public string Type { get; set; } = string.Empty;
         public int Amount { get; set; }
-        public DateTime LastUpdated { get; set; }
-
         public Guid StoreId { get; set; }
     }
 }

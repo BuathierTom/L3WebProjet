@@ -1,6 +1,7 @@
 using L3WebProjet.Business.Interfaces;
 using L3WebProjet.Common.DTO;
 using Microsoft.AspNetCore.Mvc;
+using L3WebProjet.Common.Request;
 
 namespace L3WebProjet.WebAPI.Controllers
 {
@@ -16,45 +17,47 @@ namespace L3WebProjet.WebAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SectionDto>>> GetAll()
+        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
-            var sections = await _sectionService.GetAllSectionsAsync();
+            var sections = await _sectionService.GetAllSectionsAsync(cancellationToken);
             return Ok(sections);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<SectionDto>> GetById(Guid id)
+        public async Task<IActionResult> GetById(Guid id, CancellationToken cancellationToken)
         {
-            var section = await _sectionService.GetSectionByIdAsync(id);
+            var section = await _sectionService.GetSectionByIdAsync(id, cancellationToken);
             return section is null ? NotFound() : Ok(section);
         }
 
         [HttpGet("store/{storeId}")]
-        public async Task<ActionResult<IEnumerable<SectionDto>>> GetByStore(Guid storeId)
+        public async Task<IActionResult> GetByStoreId(Guid storeId, CancellationToken cancellationToken)
         {
-            var sections = await _sectionService.GetSectionsByStoreIdAsync(storeId);
+            var sections = await _sectionService.GetSectionsByStoreIdAsync(storeId, cancellationToken);
             return Ok(sections);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(SectionDto section)
+        public async Task<IActionResult> Create(SectionCreateRequest request, CancellationToken cancellationToken)
         {
-            await _sectionService.CreateSectionAsync(section);
+            var section = await _sectionService.CreateSectionAsync(request, cancellationToken);
             return CreatedAtAction(nameof(GetById), new { id = section.Id }, section);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, SectionDto section)
+        public async Task<IActionResult> Update(Guid id, SectionUpdateRequest request, CancellationToken cancellationToken)
         {
-            if (id != section.Id) return BadRequest();
-            await _sectionService.UpdateSectionAsync(section);
+            if (id != request.Id)
+                return BadRequest("ID mismatch");
+
+            await _sectionService.UpdateSectionAsync(request, cancellationToken);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id, CancellationToken cancellationToken)
         {
-            await _sectionService.DeleteSectionAsync(id);
+            await _sectionService.DeleteSectionAsync(id, cancellationToken);
             return NoContent();
         }
     }

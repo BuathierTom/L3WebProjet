@@ -4,11 +4,11 @@ namespace L3WebProjet.DataAccess.Interfaces
 {
     public interface IStoreRepository
     {
-        Task<IEnumerable<StoreDto>> GetAllAsync();
-        Task<StoreDto?> GetByIdAsync(Guid id);
-        Task AddAsync(StoreDto store);
-        Task<IEnumerable<StoreDto>> GetByUserIdAsync(Guid userId);
-        Task UpdateAsync(StoreDto store);
-        Task DeleteAsync(Guid id);
+        Task<IEnumerable<StoreDto>> GetAllAsync(CancellationToken cancellationToken = default);
+        Task<StoreDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<IEnumerable<StoreDto>> GetByUserIdAsync(Guid userId, CancellationToken cancellationToken = default);
+        Task AddAsync(StoreDto store, CancellationToken cancellationToken = default);
+        Task UpdateAsync(StoreDto store, CancellationToken cancellationToken = default);
+        Task DeleteAsync(Guid id, CancellationToken cancellationToken = default);
     }
 }
