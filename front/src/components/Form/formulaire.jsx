@@ -23,7 +23,7 @@ export default function Formulaire() {
       // Modification ici : on envoie storeName au lieu de magasin
       const result = await registerUser({ pseudo, storeName: magasin })
       console.log('Inscription réussie:', result)
-      navigate('/dashboard')  // ← redirection ici
+      navigate('/')  // ← redirection ici
     } catch (error) {
       alert(error.message || "Erreur lors de l'inscription")
     } finally {
