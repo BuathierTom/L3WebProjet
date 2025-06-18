@@ -10,6 +10,6 @@ namespace L3WebProjet.Business.Interfaces
         Task<UserDto> CreateUserAsync(UserCreateRequest request, CancellationToken cancellationToken = default);
         Task UpdateUserAsync(UserUpdateRequest request, CancellationToken cancellationToken = default);
         Task DeleteUserAsync(Guid id, CancellationToken cancellationToken = default);
-
+        Task<UserDto> CreateUserWithStoreAsync(UserWithStoreCreateRequest request, CancellationToken cancellationToken = default);
     }
 }
