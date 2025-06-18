@@ -8,6 +8,19 @@ using L3WebProjet.DataAccess.Implementations;
 
 var builder = WebApplication.CreateBuilder(args);
 
+const string CorsPolicyName = "AllowAll";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(CorsPolicyName, policy =>
+    {
+        policy
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -36,6 +49,8 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment()) {
     app.MapOpenApi();
 }
+
+app.UseCors(CorsPolicyName);
 
 app.UseHttpsRedirection();
 
