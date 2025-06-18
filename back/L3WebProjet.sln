@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L3WebProjet.Common", "L3Web
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L3WebProjet.Business", "L3WebProjet.Business\L3WebProjet.Business.csproj", "{5ED0F37D-A834-404E-B747-A8BFF4650ED8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L3WebProjet.WebAPI.Tests", "L3WebProjet.WebAPI.Tests\L3WebProjet.WebAPI.Tests.csproj", "{994BADBB-6D5B-4DEB-9399-DF43C78F042F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{5ED0F37D-A834-404E-B747-A8BFF4650ED8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5ED0F37D-A834-404E-B747-A8BFF4650ED8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5ED0F37D-A834-404E-B747-A8BFF4650ED8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{994BADBB-6D5B-4DEB-9399-DF43C78F042F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{994BADBB-6D5B-4DEB-9399-DF43C78F042F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{994BADBB-6D5B-4DEB-9399-DF43C78F042F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{994BADBB-6D5B-4DEB-9399-DF43C78F042F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
