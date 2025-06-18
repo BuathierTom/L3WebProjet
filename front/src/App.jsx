@@ -8,8 +8,8 @@ import Inscription from './pages/Inscription/inscription'
 export default function App() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/inscription" element={<Inscription />} />
+      <Route path="/" element={<Inscription />} />
+      <Route path="/home" element={<Home />} />
     </Routes>
   )
 }
