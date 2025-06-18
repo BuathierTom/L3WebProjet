@@ -5,8 +5,7 @@ import { fetchStore } from "../../services/services";
 const Magasin = () => {
   const [buildings, setBuildings] = useState([]);
   const [resources, setResources] = useState(null);
-  const storeId = 'test-store'; // à remplacer par un vrai ID (ex: auth/localStorage)
-
+  const storeId = 'test-store'; 
   useEffect(() => {
   const load = async () => {
     try {
