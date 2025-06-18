@@ -60,5 +60,13 @@ namespace L3WebProjet.WebAPI.Controllers
             await _sectionService.DeleteSectionAsync(id, cancellationToken);
             return NoContent();
         }
+        
+        [HttpPost("upgrade/{id}")]
+        public async Task<IActionResult> UpgradeSection(Guid id, CancellationToken cancellationToken)
+        {
+            var result = await _sectionService.UpgradeSectionAsync(id, cancellationToken);
+            return result ? Ok("Section upgraded") : BadRequest("Not enough money or section not found");
+        }
+
     }
 }

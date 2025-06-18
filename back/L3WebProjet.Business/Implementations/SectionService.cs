@@ -8,10 +8,14 @@ namespace L3WebProjet.Business.Implementations
     public class SectionService : ISectionService
     {
         private readonly ISectionRepository _sectionRepository;
+        private readonly IStoreRepository _storeRepository;
+        private readonly IResourceRepository _resourceRepository;
 
-        public SectionService(ISectionRepository sectionRepository)
+        public SectionService(ISectionRepository sectionRepository, IStoreRepository storeRepository, IResourceRepository resourceRepository)
         {
             _sectionRepository = sectionRepository;
+            _storeRepository = storeRepository;
+            _resourceRepository = resourceRepository;
         }
 
         public async Task<IEnumerable<SectionDto>> GetAllSectionsAsync(CancellationToken cancellationToken = default)
@@ -63,5 +67,40 @@ namespace L3WebProjet.Business.Implementations
             await _sectionRepository.DeleteAsync(id, cancellationToken);
         }
         
+        public async Task<bool> UpgradeSectionAsync(Guid sectionId, CancellationToken cancellationToken = default)
+        {
+            var section = await _sectionRepository.GetByIdAsync(sectionId, cancellationToken);
+            if (section == null) return false;
+        
+            const int maxSectionLevel = 50;
+            if (section.Level >= maxSectionLevel)
+                return false;
+            
+            var store = await _storeRepository.GetByIdAsync(section.StoreId, cancellationToken);
+            if (store == null) return false;
+
+            var resources = await _resourceRepository.GetByStoreIdAsync(store.Id, cancellationToken);
+            var money = resources.FirstOrDefault(r => r.Type == "Money");
+            if (money == null) return false;
+
+            var upgradeCost = CalculateUpgradeCost(section.Level);
+
+            if (money.Amount < upgradeCost) return false;
+
+            money.Amount -= upgradeCost;
+            section.Level++;
+
+            await _resourceRepository.UpdateAsync(money, cancellationToken);
+            await _sectionRepository.UpdateAsync(section, cancellationToken);
+
+            return true;
+        }
+
+        private int CalculateUpgradeCost(int level)
+        {
+            // upgrade avec exponentielle
+            return (int)(100 * Math.Pow(1.5, level - 1)); 
+        }
+
     }
 }

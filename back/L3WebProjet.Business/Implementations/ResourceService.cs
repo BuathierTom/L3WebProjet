@@ -81,7 +81,7 @@ namespace L3WebProjet.Business.Implementations
             var now = DateTime.UtcNow;
             var secondsPassed = (now - store.LastCollectedAt).TotalSeconds;
 
-            var generationRate = sections.Sum(s => s.Level * 10);
+            var generationRate = sections.Sum(s => s.Level * 2);
             var moneyToAdd = (int)(secondsPassed * generationRate);
 
             resource.Amount += moneyToAdd;

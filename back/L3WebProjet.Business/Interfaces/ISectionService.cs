@@ -11,5 +11,6 @@ namespace L3WebProjet.Business.Interfaces
         Task<SectionDto> CreateSectionAsync(SectionCreateRequest request, CancellationToken cancellationToken = default);
         Task UpdateSectionAsync(SectionUpdateRequest request, CancellationToken cancellationToken = default);
         Task DeleteSectionAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<bool> UpgradeSectionAsync(Guid sectionId, CancellationToken cancellationToken = default);
     }
 }
