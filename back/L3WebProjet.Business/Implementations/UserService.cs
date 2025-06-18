@@ -9,11 +9,13 @@ namespace L3WebProjet.Business.Implementations
     {
         private readonly IUserRepository _userRepository;
         private readonly IStoreRepository _storeRepository;
+        private readonly IResourceRepository _resourceRepository;
         
-        public UserService(IUserRepository userRepository, IStoreRepository storeRepository)
+        public UserService(IUserRepository userRepository, IStoreRepository storeRepository, IResourceRepository resourceRepository)
         {
             _userRepository = userRepository;
             _storeRepository = storeRepository;
+            _resourceRepository = resourceRepository;
         }
 
         public async Task<IEnumerable<UserDto>> GetAllUsersAsync(CancellationToken cancellationToken = default)
@@ -73,6 +75,16 @@ namespace L3WebProjet.Business.Implementations
             };
 
             await _storeRepository.AddAsync(store, cancellationToken);
+
+            var startingResources = new List<ResourceDto>
+            {
+                new ResourceDto { Id = Guid.NewGuid(), Type = "Money", Amount = 100, StoreId = store.Id },
+            };
+
+            foreach (var resource in startingResources)
+            {
+                await _resourceRepository.AddAsync(resource, cancellationToken);
+            }
 
             return user;
         }
