@@ -62,7 +62,7 @@ namespace L3WebProjet.WebAPI.Controllers
             if (result < 0)
                 return BadRequest("Store or resource not found");
 
-            return Ok(new { total = result });
+            return Ok(new { money = result });
         }
     }
 }
