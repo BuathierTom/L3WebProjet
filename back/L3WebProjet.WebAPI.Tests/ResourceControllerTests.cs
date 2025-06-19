@@ -26,11 +26,17 @@ public class ResourceControllerTests
 
         var resultObject = okResult.Value;
 
-        var totalProperty = resultObject.GetType().GetProperty("money");
-        var totalValue = (int)totalProperty.GetValue(resultObject);
+        var totalProperty = resultObject?.GetType().GetProperty("money");
+        Assert.NotNull(totalProperty);
+
+        var rawValue = totalProperty!.GetValue(resultObject);
+        Assert.NotNull(rawValue); 
+
+        var totalValue = (int)(rawValue!);
 
         Assert.Equal(42, totalValue);
     }
+
 
 
     [Fact]
