@@ -27,5 +27,5 @@ export async function fetchStoreMoney(storeId) {
   }
 
   const data = await response.json();
-  return data.total ?? null; //  on lit directement le champ 'total'
+  return data.money ?? null; 
 }
