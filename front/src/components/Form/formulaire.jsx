@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import '../../style/Formulaire/formulaire.css'
-import { registerUser } from '../../services/api' // à créer
+ import { registerUser } from '../../services/api';
+import { fetchStoreByUserId } from '../../services/api'
 
 export default function Formulaire() {
   const [pseudo, setPseudo] = useState('')
@@ -9,34 +10,39 @@ export default function Formulaire() {
   const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
 
-  const handleSubmit = async (e) => {
-  e.preventDefault()
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
   if (!pseudo.trim() || !magasin.trim()) {
-    alert('Veuillez entrer un pseudo et un nom de magasin')
-    return
+    alert("Pseudo et nom de magasin requis.");
+    return;
   }
 
-  setLoading(true)
+  setLoading(true);
+
   try {
-    const result = await registerUser({ pseudo, storeName: magasin })
+    const result = await registerUser({ pseudo, storeName: magasin });
+    const userId = result.id;
+    localStorage.setItem("userId", userId);
 
-    // 🔐 Stocker userId et storeId dans le localStorage
-    localStorage.setItem('userId', result.userId)
-    localStorage.setItem('storeId', result.id)
+    // 🔁 Récupère le storeId via l'userId
+    const store = await fetchStoreByUserId(userId);
+    const storeId = store.id;
+    localStorage.setItem("storeId", storeId);
 
-    console.log('Inscription réussie:', result)
-    navigate('/home')
-  } catch (error) {
-    alert(error.message || "Erreur lors de l'inscription")
+    navigate("/home");
+  } catch (err) {
+    alert(err.message);
   } finally {
-    setLoading(false)
+    setLoading(false);
   }
-}
+};
 
 
   return (
-    <div className="form-wrapper">
+    <div className="inscription-background">
+      <div className="form-wrapper">
       <h2 className="form-title">Inscription</h2>
 
       <form className="form-container" onSubmit={handleSubmit}>
@@ -59,5 +65,7 @@ export default function Formulaire() {
         </button>
       </form>
     </div>
+    </div>
+    
   )
 }
