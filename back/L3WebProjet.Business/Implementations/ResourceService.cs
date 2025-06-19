@@ -28,11 +28,6 @@ namespace L3WebProjet.Business.Implementations
             return await _resourceRepository.GetByIdAsync(id, cancellationToken);
         }
 
-        public async Task<IEnumerable<ResourceDto>> GetResourcesByStoreIdAsync(Guid storeId, CancellationToken cancellationToken = default)
-        {
-            return await _resourceRepository.GetByStoreIdAsync(storeId, cancellationToken);
-        }
-
         public async Task<ResourceDto> CreateResourceAsync(ResourceCreateRequest request, CancellationToken cancellationToken = default)
         {
             var resource = new ResourceDto
