@@ -29,7 +29,7 @@ export async function upgradeRayon(sectionId, storeId) {
   });
 
   if (!response.ok) {
-    let errorMessage = "Erreur lors de l'upgrade";
+    let errorMessage = "❌ Pas assez d'argent pour upgrader";
     try {
       const errorData = await response.json();
       if (errorData.message) errorMessage = errorData.message;

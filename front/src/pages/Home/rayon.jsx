@@ -1,24 +1,22 @@
 import React, { useEffect, useState } from "react";
-import { fetchStore, fetchSections } from "../../services/api";
+import { fetchSections } from "../../services/api";
 import Rayon from '../../components/Rayon';
 
 export default function RayonPages() {
-  const [stores, setStores] = useState([]);
   const [selectedStoreId, setSelectedStoreId] = useState("");
   const [rayons, setRayons] = useState([]);
   const [loadingRayons, setLoadingRayons] = useState(false);
 
-  // Charger les magasins au chargement
   useEffect(() => {
-    fetchStore()
-      .then(data => {
-        setStores(data);
-        if (data.length > 0) setSelectedStoreId(data[0].id);
-      })
-      .catch(() => alert("Erreur lors du chargement des magasins"));
+    // Récupérer storeId depuis localStorage directement
+    const storeIdLS = localStorage.getItem("storeId");
+    if (!storeIdLS) {
+      alert("Aucun magasin sélectionné (storeId manquant dans localStorage)");
+      return;
+    }
+    setSelectedStoreId(storeIdLS);
   }, []);
 
-  // Charger les rayons quand un magasin est sélectionné
   useEffect(() => {
     if (!selectedStoreId) return;
 
@@ -33,20 +31,7 @@ export default function RayonPages() {
     <div style={{ padding: "1rem" }}>
       <h1>Gestion des Rayons</h1>
 
-      <label>
-        Sélectionnez un magasin :
-        <select
-          value={selectedStoreId}
-          onChange={(e) => setSelectedStoreId(e.target.value)}
-          style={{ marginLeft: "1rem" }}
-        >
-          {stores.map(store => (
-            <option key={store.id} value={store.id}>
-              {store.storeName || store.name || store.id}
-            </option>
-          ))}
-        </select>
-      </label>
+      {/* Suppression de la liste déroulante */}
 
       <div style={{ marginTop: "2rem" }}>
         {loadingRayons ? (

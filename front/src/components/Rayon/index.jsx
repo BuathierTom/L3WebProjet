@@ -17,23 +17,38 @@ const rayonImages = {
 const Rayon = ({ id, type = "action", initialLevel = 1 }) => {
   const [level, setLevel] = useState(initialLevel);
   const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState(null);       // texte popup
+  const [messageType, setMessageType] = useState(null); // "success" ou "error"
   const image = rayonImages[type] || actionImg;
   const label = type.charAt(0).toUpperCase() + type.slice(1);
+
+  const showMessage = (msg, type) => {
+    setMessage(msg);
+    setMessageType(type);
+    setTimeout(() => {
+      setMessage(null);
+      setMessageType(null);
+    }, 2000);
+  };
 
   const handleUpgrade = async () => {
     const storeId = localStorage.getItem("storeId");
     if (!storeId) {
-      alert("❌ storeId manquant dans le localStorage");
+      showMessage("❌ storeId manquant dans le localStorage", "error");
       return;
     }
 
     try {
       setLoading(true);
-      await upgradeRayon(id, storeId); // Envoie la requête POST
-      setLevel(prev => prev + 1);      // Met à jour immédiatement le niveau
-      alert(`✅ Upgrade réussi ! Nouveau niveau : ${level + 1}`);
+      await upgradeRayon(id, storeId);
+      setLevel(prev => prev + 1);
+      showMessage(`✅ Upgrade réussi ! Nouveau niveau : ${level + 1}`, "success");
     } catch (err) {
-      alert(err.message || "Erreur pendant l'upgrade");
+      if (err.message && err.message.toLowerCase().includes("argent")) {
+        showMessage("❌ Pas assez d'argent pour upgrader", "error");
+      } else {
+        showMessage(err.message || "Erreur pendant l'upgrade", "error");
+      }
     } finally {
       setLoading(false);
     }
@@ -46,6 +61,12 @@ const Rayon = ({ id, type = "action", initialLevel = 1 }) => {
       <button className="rayon-button" onClick={handleUpgrade} disabled={loading}>
         {loading ? "..." : "Upgrade"}
       </button>
+
+      {message && (
+        <div className={`popup-message ${messageType === "success" ? "popup-success" : "popup-error"}`}>
+          {message}
+        </div>
+      )}
     </div>
   );
 };

@@ -38,3 +38,40 @@ img {
     width: 200px;
     height: 200px;
 }
+
+.popup-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  color: white;
+  z-index: 1000;
+  animation: fadeinout 2s forwards;
+}
+
+.popup-success {
+  background-color: #4caf50; /* vert */
+}
+
+.popup-error {
+  background-color: #f44336; /* rouge */
+}
+
+@keyframes fadeinout {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  10%, 90% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
