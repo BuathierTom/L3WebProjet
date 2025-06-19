@@ -30,13 +30,6 @@ namespace L3WebProjet.WebAPI.Controllers
             return resource is null ? NotFound() : Ok(resource);
         }
 
-        [HttpGet("store/{storeId}")]
-        public async Task<IActionResult> GetByStoreId(Guid storeId, CancellationToken cancellationToken)
-        {
-            var resources = await _resourceService.GetResourcesByStoreIdAsync(storeId, cancellationToken);
-            return Ok(resources);
-        }
-
         [HttpPost]
         public async Task<IActionResult> Create(ResourceCreateRequest request, CancellationToken cancellationToken)
         {
@@ -65,7 +58,11 @@ namespace L3WebProjet.WebAPI.Controllers
         public async Task<IActionResult> Calculate(Guid storeId, CancellationToken cancellationToken)
         {
             var result = await _resourceService.CalculateMoneyAsync(storeId, cancellationToken);
-            return Ok(new { total = result });
+
+            if (result < 0)
+                return BadRequest("Store or resource not found");
+
+            return Ok(new { money = result });
         }
     }
 }

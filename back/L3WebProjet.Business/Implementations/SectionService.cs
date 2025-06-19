@@ -98,8 +98,7 @@ namespace L3WebProjet.Business.Implementations
 
         private int CalculateUpgradeCost(int level)
         {
-            // upgrade avec exponentielle
-            return (int)(100 * Math.Pow(1.5, level - 1)); 
+            return (int)(100 * Math.Pow(level, 1.6));
         }
 
     }

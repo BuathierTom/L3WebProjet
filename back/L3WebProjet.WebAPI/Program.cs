@@ -43,6 +43,9 @@ builder.Configuration
 builder.Services.AddDbContext<VideoclubDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Videoclub")));
 
+builder.Services.AddHealthChecks()
+    .AddNpgSql(builder.Configuration.GetConnectionString("Videoclub")!);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -51,6 +54,8 @@ if (app.Environment.IsDevelopment()) {
 }
 
 app.UseCors(CorsPolicyName);
+
+app.MapHealthChecks("/health");
 
 app.UseHttpsRedirection();
 
