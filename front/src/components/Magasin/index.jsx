@@ -3,21 +3,18 @@ import { fetchStoreByUserId, fetchStoreMoney, fetchSections } from "../../servic
 import Rayon from "../Rayon/index";
 import "../../style/Magasin/style.css";
 
-
 const Magasin = () => {
   const [argent, setArgent] = useState(null);
   const [storeId, setStoreId] = useState(null);
   const [storeName, setStoreName] = useState(null);
   const [sections, setSections] = useState([]);
 
-
   useEffect(() => {
     let userId = localStorage.getItem("userId");
     console.log("userId récupéré :", userId);
 
-    // Pour test : si userId absent, mettre un userId fixe
     if (!userId) {
-      userId = "3645a00c-680d-4dc0-895e-be7ca8605ecc"; // remplace par un vrai userId de ta base
+      userId = "3645a00c-680d-4dc0-895e-be7ca8605ecc"; // userId test
       localStorage.setItem("userId", userId);
       console.log("userId mis en localStorage pour test :", userId);
     }
@@ -25,11 +22,16 @@ const Magasin = () => {
     fetchStoreByUserId(userId)
       .then(stores => {
         console.log("Magasins reçus :", stores);
+
         if (Array.isArray(stores) && stores.length > 0) {
-          const store = stores[0]; // prends le premier magasin
+          const store = stores[0];
           setStoreId(store.id);
           setStoreName(store.name);
           localStorage.setItem("storeId", store.id);
+        } else if (stores && stores.id) {
+          setStoreId(stores.id);
+          setStoreName(stores.name);
+          localStorage.setItem("storeId", stores.id);
         } else {
           console.error("Aucun magasin trouvé pour cet utilisateur");
         }
@@ -50,8 +52,13 @@ const Magasin = () => {
     };
 
     fetchSections(storeId)
-    .then(setSections)
-    .catch(err => console.error("Erreur chargement sections :", err));
+      .then(sectionsData => {
+        console.log("Sections reçues pour storeId", storeId, ":", sectionsData);
+        // Filtrer les sections pour ne garder que celles du magasin courant
+        const filteredSections = sectionsData.filter(section => section.storeId === storeId);
+        setSections(filteredSections);
+      })
+      .catch(err => console.error("Erreur chargement sections :", err));
 
     refreshArgent();
     const interval = setInterval(refreshArgent, 3000);
@@ -67,19 +74,19 @@ const Magasin = () => {
       </div>
 
       <div className="rayons">
-  {sections.length === 0 ? (
-    <p>Chargement des rayons...</p>
-  ) : (
-    sections.map((section) => (
-      <Rayon
-        key={section.id}
-        id={section.id}
-        type={section.type.toLowerCase()}
-        initialLevel={section.level}
-      />
-    ))
-  )}
-</div>
+        {sections.length === 0 ? (
+          <p>Chargement des rayons...</p>
+        ) : (
+          sections.map(section => (
+            <Rayon
+              key={section.id}
+              id={section.id}
+              type={section.type.toLowerCase()}
+              initialLevel={section.level}
+            />
+          ))
+        )}
+      </div>
     </div>
   );
 };
