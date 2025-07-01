@@ -20,16 +20,15 @@ const Magasin = () => {
   useEffect(() => {
     refreshArgent();
 
-    // 🔁 Auto-refresh toutes les 5 sec (exemple)
     const interval = setInterval(refreshArgent, 3000);
-    return () => clearInterval(interval); // nettoyage
+    return () => clearInterval(interval); 
   }, [storeId]);
   
   return (
     <div className="magasin">
       <div className="nav-magasin">
         <h1 className="titre-magasin">{storeName ?? "Mon Magasin"}</h1>
-        <p className="argent-magasin">💰 {argent !== null ? argent + " $" : "Chargement..."}</p>
+        <p className="argent-magasin"> {argent !== null ? argent + " $" : "Chargement..."}</p>
         <p className="id-magasin"> <strong>{storeId ?? "Chargement..."}</strong></p>
       </div>
 
