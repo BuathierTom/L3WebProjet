@@ -73,7 +73,7 @@ namespace L3WebProjet.Business.Implementations
 
             await _userRepository.AddAsync(user, cancellationToken);
 
-            var store = new StoreDto
+            var store = new StoreDao
             {
                 Id = Guid.NewGuid(),
                 Name = request.StoreName,
