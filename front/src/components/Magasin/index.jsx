@@ -1,35 +1,47 @@
 import React, { useEffect, useState } from "react";
-import { fetchStoreMoney } from "../../services/api"; // adapter le chemin
+import { fetchStore, fetchStoreMoney } from "../../services/api"; // fetchStores pour récupérer la liste des magasins
 import Rayon from "../Rayon/index";
-import "../../style/Magasin/style.css"
+import "../../style/Magasin/style.css";
 
 const Magasin = () => {
   const [argent, setArgent] = useState(null);
-  const storeId = localStorage.getItem("storeId");
+  const [storeId, setStoreId] = useState(null);
   const [storeName, setStoreName] = useState(null);
 
-  // 💰 Fonction de refresh d'argent
-  const refreshArgent = () => {
-  if (!storeId) return;
-  fetchStoreMoney(storeId)
-    .then(setArgent)
-    .then((data) => setStoreName(data.name))
-    .catch((err) => console.error("Erreur refresh argent :", err));
-};
-
+  // Charger la liste des magasins et prendre le premier storeId valide
   useEffect(() => {
-    refreshArgent();
+    fetchStore()
+      .then(stores => {
+        if (stores.length > 0) {
+          setStoreId(stores[0].id);
+          setStoreName(stores[0].name);
+          localStorage.setItem("storeId", stores[0].id);
+        }
+      })
+      .catch(err => console.error("Erreur chargement magasins", err));
+  }, []);
 
+  // Refresh argent
+  useEffect(() => {
+    if (!storeId) return;
+
+    const refreshArgent = () => {
+      fetchStoreMoney(storeId)
+        .then(data => setArgent(data.money ?? data)) // selon ce que retourne ton API
+        .catch(err => console.error("Erreur refresh argent :", err));
+    };
+
+    refreshArgent();
     const interval = setInterval(refreshArgent, 3000);
-    return () => clearInterval(interval); 
+    return () => clearInterval(interval);
   }, [storeId]);
-  
+
   return (
     <div className="magasin">
       <div className="nav-magasin">
         <h1 className="titre-magasin">{storeName ?? "Mon Magasin"}</h1>
-        <p className="argent-magasin"> {argent !== null ? argent + " $" : "Chargement..."}</p>
-        <p className="id-magasin"> <strong>{storeId ?? "Chargement..."}</strong></p>
+        <p className="argent-magasin">{argent !== null ? argent + " $" : "Chargement..."}</p>
+        <p className="id-magasin"><strong>{storeId ?? "Chargement..."}</strong></p>
       </div>
 
       <div className="rayons">

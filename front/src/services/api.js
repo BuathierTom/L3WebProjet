@@ -1,5 +1,6 @@
 const API_BASE_URL = 'https://localhost:7264/api';
 
+// ✅ Enregistre un utilisateur avec un magasin
 export async function registerUser(data) {
   const response = await fetch(`${API_BASE_URL}/User/createWithStore`, {
     method: 'POST',
@@ -11,12 +12,14 @@ export async function registerUser(data) {
   return await response.json(); // contient l'id (userId)
 }
 
+// ✅ Récupère un magasin via un userId
 export async function fetchStoreByUserId(userId) {
   const response = await fetch(`${API_BASE_URL}/Store/user/${userId}`);
   if (!response.ok) throw new Error("Magasin introuvable pour cet utilisateur");
   return await response.json(); // contient storeId
 }
 
+// ✅ Calcule l'argent du magasin
 export async function fetchStoreMoney(storeId) {
   const response = await fetch(`${API_BASE_URL}/Resource/calculate/${storeId}`, {
     method: 'POST',
@@ -24,18 +27,20 @@ export async function fetchStoreMoney(storeId) {
 
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData.message || "Erreur lors de l'inscription");
+    throw new Error(errorData.message || "Erreur lors du calcul de l'argent du magasin");
   }
 
-  return response.json();
+  return await response.json();
 }
 
+// ✅ Récupère tous les magasins
 export async function fetchStore() {
   const response = await fetch(`${API_BASE_URL}/Store`);
   if (!response.ok) throw new Error("Impossible de charger les magasins");
-  return response.json();
+  return await response.json();
 }
 
+// ✅ Upgrade un rayon (section)
 export async function upgradeRayon(sectionId, storeId) {
   const response = await fetch(`${API_BASE_URL}/Section/upgrade/${sectionId}`, {
     method: 'POST',
@@ -52,22 +57,30 @@ export async function upgradeRayon(sectionId, storeId) {
     throw new Error(errorMessage);
   }
 
-  // ✅ ATTENTION ici : ne pas parser en JSON
+  // ✅ ATTENTION ici : ne pas parser en JSON si l'API retourne un texte simple
   const text = await response.text();
   console.log("Réponse brute :", text);
 
-  // Retourner juste une confirmation ou l’ancien niveau +1 si besoin
-  return { success: true }; // ou retourne `text` si tu veux l'afficher
+  return { success: true }; // ou retourne `text` si besoin
 }
 
+// ✅ Récupère les sections d’un magasin
 export async function fetchSections(storeId) {
   const response = await fetch(`${API_BASE_URL}/section?storeId=${storeId}`);
   if (!response.ok) throw new Error("Impossible de charger les sections");
-  return response.json();
+  return await response.json();
 }
+
+// ✅ Optionnel : récupère uniquement le montant d'argent du magasin
+export async function fetchStoreMoneyAmount(storeId) {
+  const response = await fetch(`${API_BASE_URL}/Resource/calculate/${storeId}`, {
+    method: 'POST',
+  });
+
+  if (!response.ok) {
     throw new Error("Erreur lors du calcul de l'argent du magasin");
   }
 
   const data = await response.json();
-  return data.money ?? null; 
+  return data.money ?? null;
 }
