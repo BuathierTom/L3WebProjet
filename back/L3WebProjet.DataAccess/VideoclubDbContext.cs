@@ -12,7 +12,7 @@ namespace L3WebProjet.DataAccess
         public DbSet<UserDao> Users { get; set; }
         public DbSet<StoreDao> Stores { get; set; }
         public DbSet<SectionDao> Sections { get; set; }
-        public DbSet<ResourceDto> Resources { get; set; }
+        public DbSet<ResourceDao> Resources { get; set; }
         public DbSet<WarehouseDao> Warehouses { get; set; }
     }
 }

@@ -91,9 +91,9 @@ namespace L3WebProjet.Business.Implementations
             };
             await _warehouseRepository.AddAsync(warehouse, cancellationToken);
 
-            var startingResources = new List<ResourceDto>
+            var startingResources = new List<ResourceDao>
             {
-                new ResourceDto { Id = Guid.NewGuid(), Type = "Money", Amount = 100, StoreId = store.Id }
+                new ResourceDao { Id = Guid.NewGuid(), Type = "Money", Amount = 100, StoreId = store.Id }
             };
 
             foreach (var resource in startingResources)
