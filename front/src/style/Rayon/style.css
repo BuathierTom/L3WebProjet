@@ -1,4 +1,77 @@
+.rayon {
+  text-align: center;
+  margin: 1rem;
+  cursor: default;
+  background-color: #fff;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 160px;
+}
+
+.rayon-image {
+  width: 128px;
+}
+
+.rayon-label {
+  font-family: monospace;
+  margin: 0.5rem 0;
+}
+
+.rayon-button {
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  font-family: monospace;
+  transition: background-color 0.3s ease;
+}
+
+.rayon-button:hover {
+  background-color: #3730a3;
+}
+
 img {
     width: 200px;
     height: 200px;
 }
+
+.popup-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  color: white;
+  z-index: 1000;
+  animation: fadeinout 2s forwards;
+}
+
+.popup-success {
+  background-color: #4caf50; /* vert */
+}
+
+.popup-error {
+  background-color: #f44336; /* rouge */
+}
+
+@keyframes fadeinout {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  10%, 90% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+

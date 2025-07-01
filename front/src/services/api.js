@@ -23,9 +23,15 @@ export async function fetchStoreMoney(storeId) {
   });
 
   if (!response.ok) {
-    throw new Error("Erreur lors du calcul de l'argent du magasin");
+    const errorData = await response.json()
+    throw new Error(errorData.message || 'Erreur lors de l\'inscription')
   }
 
-  const data = await response.json();
-  return data.money ?? null; 
+  return response.json()
+}
+
+export async function fetchStore() {
+  const response = await fetch(`${API_BASE_URL}/Store`);
+  if (!response.ok) throw new Error("Impossible de charger les magasins");
+  return await response.json(); // tableau de magasins
 }
