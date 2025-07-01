@@ -10,12 +10,14 @@ namespace L3WebProjet.Business.Implementations
         private readonly IResourceRepository _resourceRepository;
         private readonly IStoreRepository _storeRepository;
         private readonly ISectionRepository _sectionRepository;
+        private readonly IWarehouseRepository _warehouseRepository;
 
-        public ResourceService(IResourceRepository resourceRepository, IStoreRepository storeRepository, ISectionRepository sectionRepository)
+        public ResourceService(IResourceRepository resourceRepository, IStoreRepository storeRepository, ISectionRepository sectionRepository, IWarehouseRepository warehouseRepository)
         {
             _resourceRepository = resourceRepository;
             _storeRepository = storeRepository;
             _sectionRepository = sectionRepository;
+            _warehouseRepository = warehouseRepository;
         }
     
         public async Task<IEnumerable<ResourceDto>> GetAllResourcesAsync(CancellationToken cancellationToken = default)
@@ -73,13 +75,19 @@ namespace L3WebProjet.Business.Implementations
             if (resource == null)
                 throw new Exception("Money resource not found");
 
+            var warehouse = await _warehouseRepository.GetByStoreIdAsync(storeId, cancellationToken);
+            if (warehouse == null)
+                throw new Exception("Warehouse not found");
+
+            var cap = 10000 * warehouse.Level;
+
             var now = DateTime.UtcNow;
             var secondsPassed = (now - store.LastCollectedAt).TotalSeconds;
 
             var generationRate = sections.Sum(s => s.Level * 2);
             var moneyToAdd = (int)(secondsPassed * generationRate);
 
-            resource.Amount += moneyToAdd;
+            resource.Amount = Math.Min(resource.Amount + moneyToAdd, cap);
             store.LastCollectedAt = now;
 
             await _resourceRepository.UpdateAsync(resource, cancellationToken);
