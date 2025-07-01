@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fetchStore, fetchStoreMoney } from "../../services/api"; // fetchStores pour récupérer la liste des magasins
+import { fetchStoreByUserId, fetchStoreMoney } from "../../services/api";
 import Rayon from "../Rayon/index";
 import "../../style/Magasin/style.css";
 
@@ -8,26 +8,41 @@ const Magasin = () => {
   const [storeId, setStoreId] = useState(null);
   const [storeName, setStoreName] = useState(null);
 
-  // Charger la liste des magasins et prendre le premier storeId valide
   useEffect(() => {
-    fetchStore()
+    let userId = localStorage.getItem("userId");
+    console.log("userId récupéré :", userId);
+
+    // Pour test : si userId absent, mettre un userId fixe
+    if (!userId) {
+      userId = "3645a00c-680d-4dc0-895e-be7ca8605ecc"; // remplace par un vrai userId de ta base
+      localStorage.setItem("userId", userId);
+      console.log("userId mis en localStorage pour test :", userId);
+    }
+
+    fetchStoreByUserId(userId)
       .then(stores => {
-        if (stores.length > 0) {
-          setStoreId(stores[0].id);
-          setStoreName(stores[0].name);
-          localStorage.setItem("storeId", stores[0].id);
+        console.log("Magasins reçus :", stores);
+        if (Array.isArray(stores) && stores.length > 0) {
+          const store = stores[0]; // prends le premier magasin
+          setStoreId(store.id);
+          setStoreName(store.name);
+          localStorage.setItem("storeId", store.id);
+        } else {
+          console.error("Aucun magasin trouvé pour cet utilisateur");
         }
       })
-      .catch(err => console.error("Erreur chargement magasins", err));
+      .catch(err => console.error("Erreur récupération magasin lié à l'utilisateur :", err));
   }, []);
 
-  // Refresh argent
   useEffect(() => {
     if (!storeId) return;
 
     const refreshArgent = () => {
       fetchStoreMoney(storeId)
-        .then(data => setArgent(data.money ?? data)) // selon ce que retourne ton API
+        .then(data => {
+          console.log("Argent reçu :", data);
+          setArgent(data.money ?? data);
+        })
         .catch(err => console.error("Erreur refresh argent :", err));
     };
 
