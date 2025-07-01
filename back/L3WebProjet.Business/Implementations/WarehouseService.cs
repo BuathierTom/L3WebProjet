@@ -1,4 +1,5 @@
 using L3WebProjet.Business.Interfaces;
+using L3WebProjet.Common.DAO;
 using L3WebProjet.Common.DTO;
 using L3WebProjet.DataAccess.Interfaces;
 
@@ -17,18 +18,32 @@ namespace L3WebProjet.Business.Implementations
 
         public async Task<WarehouseDto?> GetByStoreIdAsync(Guid storeId, CancellationToken cancellationToken)
         {
-            return await _warehouseRepository.GetByStoreIdAsync(storeId, cancellationToken);
+            var warehouse = await _warehouseRepository.GetByStoreIdAsync(storeId, cancellationToken);
+            return warehouse == null ? null : new WarehouseDto
+            {
+                Id = warehouse.Id,
+                StoreId = warehouse.StoreId,
+                Level = warehouse.Level
+            };
         }
 
         public async Task<WarehouseDto> AddAsync(Guid storeId, CancellationToken cancellationToken)
         {
-            var dto = new WarehouseDto
+            var dao = new WarehouseDao
             {
+                Id = Guid.NewGuid(),
                 StoreId = storeId,
                 Level = 1
             };
 
-            return await _warehouseRepository.AddAsync(dto, cancellationToken);
+            var created = await _warehouseRepository.AddAsync(dao, cancellationToken);
+
+            return new WarehouseDto
+            {
+                Id = created.Id,
+                StoreId = created.StoreId,
+                Level = created.Level
+            };
         }
 
         public async Task<bool> UpgradeWarehouseAsync(Guid storeId, CancellationToken cancellationToken = default)
@@ -46,7 +61,7 @@ namespace L3WebProjet.Business.Implementations
 
             var nextLevel = warehouse.Level + 1;
             var nextCapacity = nextLevel * 10000;
-            var upgradeCost = (int)(nextCapacity * 0.2); // 20% du cap du niveau cible
+            var upgradeCost = (int)(nextCapacity * 0.2);
 
             if (money.Amount < upgradeCost)
                 return false;
@@ -59,7 +74,5 @@ namespace L3WebProjet.Business.Implementations
 
             return true;
         }
-
-
     }
 }

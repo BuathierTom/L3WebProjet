@@ -1,5 +1,6 @@
 using L3WebProjet.Business.Interfaces;
 using L3WebProjet.Common.DTO;
+using L3WebProjet.Common.DAO;
 using L3WebProjet.DataAccess.Interfaces;
 using L3WebProjet.Common.Request;
 
@@ -20,22 +21,25 @@ namespace L3WebProjet.Business.Implementations
 
         public async Task<IEnumerable<SectionDto>> GetAllSectionsAsync(CancellationToken cancellationToken = default)
         {
-            return await _sectionRepository.GetAllAsync(cancellationToken);
+            var daos = await _sectionRepository.GetAllAsync(cancellationToken);
+            return daos.Select(SectionDto.ToDto);
         }
 
         public async Task<SectionDto?> GetSectionByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await _sectionRepository.GetByIdAsync(id, cancellationToken);
+            var dao = await _sectionRepository.GetByIdAsync(id, cancellationToken);
+            return dao is null ? null : SectionDto.ToDto(dao);
         }
 
         public async Task<IEnumerable<SectionDto>> GetSectionsByStoreIdAsync(Guid storeId, CancellationToken cancellationToken = default)
         {
-            return await _sectionRepository.GetByStoreIdAsync(storeId, cancellationToken);
+            var daos = await _sectionRepository.GetByStoreIdAsync(storeId, cancellationToken);
+            return daos.Select(SectionDto.ToDto);
         }
 
         public async Task<SectionDto> CreateSectionAsync(SectionCreateRequest request, CancellationToken cancellationToken = default)
         {
-            var section = new SectionDto
+            var section = new SectionDao
             {
                 Id = Guid.NewGuid(),
                 Type = request.Type,
@@ -46,12 +50,12 @@ namespace L3WebProjet.Business.Implementations
             };
 
             await _sectionRepository.AddAsync(section, cancellationToken);
-            return section;
+            return SectionDto.ToDto(section);
         }
 
         public async Task UpdateSectionAsync(SectionUpdateRequest request, CancellationToken cancellationToken = default)
         {
-            var section = new SectionDto
+            var section = new SectionDao
             {
                 Id = request.Id,
                 Type = request.Type,
@@ -66,16 +70,16 @@ namespace L3WebProjet.Business.Implementations
         {
             await _sectionRepository.DeleteAsync(id, cancellationToken);
         }
-        
+
         public async Task<bool> UpgradeSectionAsync(Guid sectionId, CancellationToken cancellationToken = default)
         {
             var section = await _sectionRepository.GetByIdAsync(sectionId, cancellationToken);
             if (section == null) return false;
-        
+
             const int maxSectionLevel = 50;
             if (section.Level >= maxSectionLevel)
                 return false;
-            
+
             var store = await _storeRepository.GetByIdAsync(section.StoreId, cancellationToken);
             if (store == null) return false;
 
@@ -83,8 +87,7 @@ namespace L3WebProjet.Business.Implementations
             var money = resources.FirstOrDefault(r => r.Type == "Money");
             if (money == null) return false;
 
-            var upgradeCost = CalculateUpgradeCost(section.Level);
-
+            var upgradeCost = (int)(100 * Math.Pow(section.Level, 1.6));
             if (money.Amount < upgradeCost) return false;
 
             money.Amount -= upgradeCost;
@@ -95,11 +98,5 @@ namespace L3WebProjet.Business.Implementations
 
             return true;
         }
-
-        private int CalculateUpgradeCost(int level)
-        {
-            return (int)(100 * Math.Pow(level, 1.6));
-        }
-
     }
 }
