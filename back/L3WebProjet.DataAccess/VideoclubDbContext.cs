@@ -12,5 +12,6 @@ namespace L3WebProjet.DataAccess
         public DbSet<StoreDto> Stores { get; set; }
         public DbSet<SectionDto> Sections { get; set; }
         public DbSet<ResourceDto> Resources { get; set; }
+        public DbSet<WarehouseDto> Warehouses { get; set; }
     }
 }
