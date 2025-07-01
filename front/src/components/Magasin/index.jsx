@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { fetchStoreByUserId, fetchStoreMoney } from "../../services/api";
+import { fetchStoreByUserId, fetchStoreMoney, fetchSections } from "../../services/api";
 import Rayon from "../Rayon/index";
 import "../../style/Magasin/style.css";
+
 
 const Magasin = () => {
   const [argent, setArgent] = useState(null);
   const [storeId, setStoreId] = useState(null);
   const [storeName, setStoreName] = useState(null);
+  const [sections, setSections] = useState([]);
+
 
   useEffect(() => {
     let userId = localStorage.getItem("userId");
@@ -46,6 +49,10 @@ const Magasin = () => {
         .catch(err => console.error("Erreur refresh argent :", err));
     };
 
+    fetchSections(storeId)
+    .then(setSections)
+    .catch(err => console.error("Erreur chargement sections :", err));
+
     refreshArgent();
     const interval = setInterval(refreshArgent, 3000);
     return () => clearInterval(interval);
@@ -60,11 +67,19 @@ const Magasin = () => {
       </div>
 
       <div className="rayons">
-        <Rayon className="div-rayon" type="action" />
-        <Rayon className="div-rayon" type="horreur" />
-        <Rayon className="div-rayon" type="comedie" />
-        <Rayon className="div-rayon" type="scifi" />
-      </div>
+  {sections.length === 0 ? (
+    <p>Chargement des rayons...</p>
+  ) : (
+    sections.map((section) => (
+      <Rayon
+        key={section.id}
+        id={section.id}
+        type={section.type.toLowerCase()}
+        initialLevel={section.level}
+      />
+    ))
+  )}
+</div>
     </div>
   );
 };
