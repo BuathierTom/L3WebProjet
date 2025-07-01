@@ -101,7 +101,7 @@ namespace L3WebProjet.Business.Implementations
                 await _resourceRepository.AddAsync(resource, cancellationToken);
             }
 
-            var defaultSection = new SectionDto
+            var defaultSection = new SectionDao
             {
                 Id = Guid.NewGuid(),
                 Type = "Comédie",

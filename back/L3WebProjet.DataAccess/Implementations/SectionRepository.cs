@@ -1,3 +1,4 @@
+using L3WebProjet.Common.DAO;
 using L3WebProjet.Common.DTO;
 using L3WebProjet.DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -13,30 +14,30 @@ namespace L3WebProjet.DataAccess.Implementations
             _context = context;
         }
 
-        public async Task<IEnumerable<SectionDto>> GetAllAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<SectionDao>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _context.Sections.ToListAsync(cancellationToken);
         }
 
-        public async Task<SectionDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<SectionDao?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _context.Sections.FirstOrDefaultAsync(s => s.Id == id, cancellationToken);
         }
 
-        public async Task<IEnumerable<SectionDto>> GetByStoreIdAsync(Guid storeId, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<SectionDao>> GetByStoreIdAsync(Guid storeId, CancellationToken cancellationToken = default)
         {
             return await _context.Sections
                 .Where(s => s.StoreId == storeId)
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task AddAsync(SectionDto section, CancellationToken cancellationToken = default)
+        public async Task AddAsync(SectionDao section, CancellationToken cancellationToken = default)
         {
             await _context.Sections.AddAsync(section, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task UpdateAsync(SectionDto section, CancellationToken cancellationToken = default)
+        public async Task UpdateAsync(SectionDao section, CancellationToken cancellationToken = default)
         {
             _context.Sections.Update(section);
             await _context.SaveChangesAsync(cancellationToken);
