@@ -1,4 +1,5 @@
 using L3WebProjet.Business.Interfaces;
+using L3WebProjet.Common.DAO;
 using L3WebProjet.Common.DTO;
 using L3WebProjet.DataAccess.Interfaces;
 using L3WebProjet.Common.Request;
@@ -80,7 +81,7 @@ namespace L3WebProjet.Business.Implementations
 
             await _storeRepository.AddAsync(store, cancellationToken);
 
-            var warehouse = new WarehouseDto
+            var warehouse = new WarehouseDao
             {
                 Id = Guid.NewGuid(),
                 StoreId = store.Id,
