@@ -11,13 +11,15 @@ namespace L3WebProjet.Business.Implementations
         private readonly IStoreRepository _storeRepository;
         private readonly IResourceRepository _resourceRepository;
         private readonly ISectionRepository _sectionRepository;
+        private readonly IWarehouseRepository _warehouseRepository;
         
-        public UserService(IUserRepository userRepository, IStoreRepository storeRepository, IResourceRepository resourceRepository, ISectionRepository sectionRepository)
+        public UserService(IUserRepository userRepository, IStoreRepository storeRepository, IResourceRepository resourceRepository, ISectionRepository sectionRepository, IWarehouseRepository warehouseRepository)
         {
             _userRepository = userRepository;
             _storeRepository = storeRepository;
             _resourceRepository = resourceRepository;
             _sectionRepository = sectionRepository;
+            _warehouseRepository = warehouseRepository;
         }
 
         public async Task<IEnumerable<UserDto>> GetAllUsersAsync(CancellationToken cancellationToken = default)
@@ -78,16 +80,24 @@ namespace L3WebProjet.Business.Implementations
 
             await _storeRepository.AddAsync(store, cancellationToken);
 
+            var warehouse = new WarehouseDto
+            {
+                Id = Guid.NewGuid(),
+                StoreId = store.Id,
+                Level = 1
+            };
+            await _warehouseRepository.AddAsync(warehouse, cancellationToken);
+
             var startingResources = new List<ResourceDto>
             {
-                new ResourceDto { Id = Guid.NewGuid(), Type = "Money", Amount = 100, StoreId = store.Id },
+                new ResourceDto { Id = Guid.NewGuid(), Type = "Money", Amount = 100, StoreId = store.Id }
             };
 
             foreach (var resource in startingResources)
             {
                 await _resourceRepository.AddAsync(resource, cancellationToken);
             }
-            
+
             var defaultSection = new SectionDto
             {
                 Id = Guid.NewGuid(),
@@ -100,9 +110,8 @@ namespace L3WebProjet.Business.Implementations
 
             await _sectionRepository.AddAsync(defaultSection, cancellationToken);
 
-
             return user;
         }
-
+        
     }
 }
