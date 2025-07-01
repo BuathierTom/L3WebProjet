@@ -25,29 +25,31 @@ namespace L3WebProjet.Business.Implementations
 
         public async Task<IEnumerable<UserDto>> GetAllUsersAsync(CancellationToken cancellationToken = default)
         {
-            return await _userRepository.GetAllAsync(cancellationToken);
+            var daos = await _userRepository.GetAllAsync(cancellationToken);
+            return daos.Select(u => u.ToDto());
         }
 
         public async Task<UserDto?> GetUserByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await _userRepository.GetByIdAsync(id, cancellationToken);
+            var dao = await _userRepository.GetByIdAsync(id, cancellationToken);
+            return dao?.ToDto();
         }
 
         public async Task<UserDto> CreateUserAsync(UserCreateRequest request, CancellationToken cancellationToken = default)
         {
-            var user = new UserDto
+            var user = new UserDao
             {
                 Id = Guid.NewGuid(),
                 Pseudo = request.Pseudo
             };
 
             await _userRepository.AddAsync(user, cancellationToken);
-            return user;
+            return user.ToDto();
         }
 
         public async Task UpdateUserAsync(UserUpdateRequest request, CancellationToken cancellationToken = default)
         {
-            var user = new UserDto
+            var user = new UserDao
             {
                 Id = request.Id,
                 Pseudo = request.Pseudo
@@ -63,7 +65,7 @@ namespace L3WebProjet.Business.Implementations
 
         public async Task<UserDto> CreateUserWithStoreAsync(UserWithStoreCreateRequest request, CancellationToken cancellationToken = default)
         {
-            var user = new UserDto
+            var user = new UserDao
             {
                 Id = Guid.NewGuid(),
                 Pseudo = request.Pseudo
@@ -111,8 +113,9 @@ namespace L3WebProjet.Business.Implementations
 
             await _sectionRepository.AddAsync(defaultSection, cancellationToken);
 
-            return user;
+            return user.ToDto();
         }
+
         
     }
 }

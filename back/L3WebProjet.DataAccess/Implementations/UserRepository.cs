@@ -1,3 +1,4 @@
+using L3WebProjet.Common.DAO;
 using L3WebProjet.Common.DTO;
 using L3WebProjet.DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -13,23 +14,23 @@ namespace L3WebProjet.DataAccess.Implementations
             _context = context;
         }
 
-        public async Task<IEnumerable<UserDto>> GetAllAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<UserDao>> GetAllAsync(CancellationToken cancellationToken = default)
         {
             return await _context.Users.ToListAsync(cancellationToken);
         }
 
-        public async Task<UserDto?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<UserDao?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
         }
 
-        public async Task AddAsync(UserDto user, CancellationToken cancellationToken = default)
+        public async Task AddAsync(UserDao user, CancellationToken cancellationToken = default)
         {
             await _context.Users.AddAsync(user, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task UpdateAsync(UserDto user, CancellationToken cancellationToken = default)
+        public async Task UpdateAsync(UserDao user, CancellationToken cancellationToken = default)
         {
             _context.Users.Update(user);
             await _context.SaveChangesAsync(cancellationToken);
