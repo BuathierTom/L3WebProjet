@@ -3,6 +3,7 @@ using System;
 using L3WebProjet.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace L3WebProjet.DataAccess.Migrations
 {
     [DbContext(typeof(VideoclubDbContext))]
-    partial class VideoclubDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250701120711_WarehouseMigration")]
+    partial class WarehouseMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +25,7 @@ namespace L3WebProjet.DataAccess.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("L3WebProjet.Common.DAO.ResourceDao", b =>
+            modelBuilder.Entity("L3WebProjet.Common.DTO.ResourceDto", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -46,7 +49,7 @@ namespace L3WebProjet.DataAccess.Migrations
                     b.ToTable("Resources");
                 });
 
-            modelBuilder.Entity("L3WebProjet.Common.DAO.SectionDao", b =>
+            modelBuilder.Entity("L3WebProjet.Common.DTO.SectionDto", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -73,7 +76,7 @@ namespace L3WebProjet.DataAccess.Migrations
                     b.ToTable("Sections");
                 });
 
-            modelBuilder.Entity("L3WebProjet.Common.DAO.StoreDao", b =>
+            modelBuilder.Entity("L3WebProjet.Common.DTO.StoreDto", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -97,7 +100,7 @@ namespace L3WebProjet.DataAccess.Migrations
                     b.ToTable("Stores");
                 });
 
-            modelBuilder.Entity("L3WebProjet.Common.DAO.UserDao", b =>
+            modelBuilder.Entity("L3WebProjet.Common.DTO.UserDto", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -112,7 +115,7 @@ namespace L3WebProjet.DataAccess.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("L3WebProjet.Common.DAO.WarehouseDao", b =>
+            modelBuilder.Entity("L3WebProjet.Common.DTO.WarehouseDto", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

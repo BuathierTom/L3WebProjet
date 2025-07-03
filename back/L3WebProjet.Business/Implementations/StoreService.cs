@@ -1,7 +1,8 @@
 using L3WebProjet.Business.Interfaces;
+using L3WebProjet.Common.DAO;
 using L3WebProjet.Common.DTO;
-using L3WebProjet.DataAccess.Interfaces;
 using L3WebProjet.Common.Request;
+using L3WebProjet.DataAccess.Interfaces;
 
 namespace L3WebProjet.Business.Implementations
 {
@@ -16,41 +17,46 @@ namespace L3WebProjet.Business.Implementations
 
         public async Task<IEnumerable<StoreDto>> GetAllStoresAsync()
         {
-            return await _storeRepository.GetAllAsync();
+            var daos = await _storeRepository.GetAllAsync();
+            return daos.Select(s => s.ToDto());
         }
-        
+
         public async Task<IEnumerable<StoreDto>> GetAllStoresAsync(CancellationToken cancellationToken = default)
         {
-            return await _storeRepository.GetAllAsync(cancellationToken);
+            var daos = await _storeRepository.GetAllAsync(cancellationToken);
+            return daos.Select(s => s.ToDto());
         }
 
         public async Task<StoreDto?> GetStoreByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await _storeRepository.GetByIdAsync(id, cancellationToken);
+            var dao = await _storeRepository.GetByIdAsync(id, cancellationToken);
+            return dao?.ToDto();
         }
 
         public async Task<IEnumerable<StoreDto>> GetStoresByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
         {
-            return await _storeRepository.GetByUserIdAsync(userId, cancellationToken);
+            var daos = await _storeRepository.GetByUserIdAsync(userId, cancellationToken);
+            return daos.Select(s => s.ToDto());
         }
 
         public async Task<StoreDto> CreateStoreAsync(StoreCreateRequest request, CancellationToken cancellationToken = default)
         {
-            var store = new StoreDto
+            var store = new StoreDao
             {
                 Id = Guid.NewGuid(),
                 Name = request.Name,
                 CreatedAt = DateTime.UtcNow,
+                LastCollectedAt = DateTime.UtcNow,
                 UserId = request.UserId
             };
 
             await _storeRepository.AddAsync(store, cancellationToken);
-            return store;
+            return store.ToDto();
         }
 
         public async Task UpdateStoreAsync(StoreUpdateRequest request, CancellationToken cancellationToken = default)
         {
-            var store = new StoreDto
+            var store = new StoreDao
             {
                 Id = request.Id,
                 Name = request.Name,
@@ -64,6 +70,5 @@ namespace L3WebProjet.Business.Implementations
         {
             await _storeRepository.DeleteAsync(id, cancellationToken);
         }
-
     }
 }
