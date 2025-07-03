@@ -19,7 +19,14 @@ export async function fetchStoreByUserId(userId) {
   return await response.json();
 }
 
-// Calcule l'argent du magasin
+// Récupère tous les magasins (optionnel)
+export async function fetchStore() {
+  const response = await fetch(`${API_BASE_URL}/Store`);
+  if (!response.ok) throw new Error("Impossible de charger les magasins");
+  return await response.json();
+}
+
+// Calcule et récupère l'argent du magasin
 export async function fetchStoreMoney(storeId) {
   const response = await fetch(`${API_BASE_URL}/Resource/calculate/${storeId}`, {
     method: 'POST',
@@ -30,77 +37,10 @@ export async function fetchStoreMoney(storeId) {
     throw new Error(errorData.message || "Erreur lors du calcul de l'argent du magasin");
   }
 
-  return await response.json();
+  return await response.json(); // retourne { money: xxx }
 }
 
-// Récupère tous les magasins
-export async function fetchStore() {
-  const response = await fetch(`${API_BASE_URL}/Store`);
-  if (!response.ok) throw new Error("Impossible de charger les magasins");
-  return await response.json();
-}
-
-// Upgrade un rayon (section)
-export async function upgradeRayon(sectionId, storeId) {
-  const response = await fetch(`${API_BASE_URL}/Section/upgrade/${sectionId}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ storeId }),
-  });
-
-  if (!response.ok) {
-    let errorMessage = "❌ Pas assez d'argent pour upgrader";
-    try {
-      const errorData = await response.json();
-      if (errorData.message) errorMessage = errorData.message;
-    } catch {}
-    throw new Error(errorMessage);
-  }
-
-  const text = await response.text();
-  console.log("Réponse brute :", text);
-
-  return { success: true };
-}
-
-// Récupère les sections d’un magasin (avec log)
-export async function fetchSections(storeId) {
-  console.log("API - fetchSections appelé avec storeId =", storeId);
-  const response = await fetch(`${API_BASE_URL}/Section/?storeId=${storeId}`);
-  if (!response.ok) throw new Error("Impossible de charger les sections");
-  const sections = await response.json();
-  console.log("API - sections reçues :", sections);
-  return sections;
-}
-
-// Récupère une section précise par son ID (optionnel)
-export async function fetchSectionById(sectionId) {
-  console.log("API - fetchSectionById appelé avec sectionId =", sectionId);
-  const response = await fetch(`${API_BASE_URL}/Section/${sectionId}`);
-  if (!response.ok) throw new Error("Section introuvable");
-  const section = await response.json();
-  console.log("API - section reçue :", section);
-  return section;
-}
-
-// Creation d'un rayon dans le magasin 
-export async function createSection(storeId, type) {
-  const response = await fetch(`${API_BASE_URL}/Section`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ storeId, type })
-  });
-
-  if (!response.ok) {
-    const err = await response.json();
-    throw new Error(err.message || "Erreur lors de l'ajout du rayon");
-  }
-
-  return await response.json();
-}
-
-
-// Optionnel : récupère uniquement le montant d'argent du magasin
+// Récupère uniquement le montant d'argent (extraction directe)
 export async function fetchStoreMoneyAmount(storeId) {
   const response = await fetch(`${API_BASE_URL}/Resource/calculate/${storeId}`, {
     method: 'POST',
@@ -112,4 +52,69 @@ export async function fetchStoreMoneyAmount(storeId) {
 
   const data = await response.json();
   return data.money ?? null;
+}
+
+// Récupère les sections d’un magasin (rayons)
+export async function fetchSections(storeId) {
+  console.log("API - fetchSections appelé avec storeId =", storeId);
+  const response = await fetch(`${API_BASE_URL}/Section/?storeId=${storeId}`);
+  if (!response.ok) throw new Error("Impossible de charger les sections");
+  const sections = await response.json();
+  console.log("API - sections reçues :", sections);
+  return sections;
+}
+
+// Crée un nouveau rayon dans un magasin
+export async function createSection(storeId, type) {
+  const response = await fetch(`${API_BASE_URL}/Section`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ storeId, type }),
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.message || "Erreur lors de l'ajout du rayon");
+  }
+
+  return await response.json();
+}
+
+// Récupère une section précise (optionnel)
+export async function fetchSectionById(sectionId) {
+  console.log("API - fetchSectionById appelé avec sectionId =", sectionId);
+  const response = await fetch(`${API_BASE_URL}/Section/${sectionId}`);
+  if (!response.ok) throw new Error("Section introuvable");
+  const section = await response.json();
+  console.log("API - section reçue :", section);
+  return section;
+}
+
+// Upgrade un rayon donné
+export async function upgradeRayon(sectionId, storeId) {
+  const response = await fetch(`${API_BASE_URL}/Section/upgrade/${sectionId}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ storeId }),
+  });
+
+  if (!response.ok) {
+    let errorMessage = "Pas assez d'argent pour upgrader";
+    try {
+      const errorData = await response.json();
+      if (errorData.message) errorMessage = errorData.message;
+    } catch {}
+    throw new Error(errorMessage);
+  }
+
+  const text = await response.text();
+  console.log("Réponse brute :", text);
+  return { success: true };
+}
+
+// Récupère le classement des utilisateurs
+export async function fetchLeaderboard() {
+  const response = await fetch(`${API_BASE_URL}/Leaderboard`);
+  if (!response.ok) throw new Error("Erreur lors du chargement du classement");
+  return await response.json(); // format attendu : [{ userId, pseudo, score }]
 }
