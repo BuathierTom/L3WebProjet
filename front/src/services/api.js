@@ -83,6 +83,23 @@ export async function fetchSectionById(sectionId) {
   return section;
 }
 
+// Creation d'un rayon dans le magasin 
+export async function createSection(storeId, type) {
+  const response = await fetch(`${API_BASE_URL}/Section`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ storeId, type })
+  });
+
+  if (!response.ok) {
+    const err = await response.json();
+    throw new Error(err.message || "Erreur lors de l'ajout du rayon");
+  }
+
+  return await response.json();
+}
+
+
 // Optionnel : récupère uniquement le montant d'argent du magasin
 export async function fetchStoreMoneyAmount(storeId) {
   const response = await fetch(`${API_BASE_URL}/Resource/calculate/${storeId}`, {
