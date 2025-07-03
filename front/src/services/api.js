@@ -118,3 +118,28 @@ export async function fetchLeaderboard() {
   if (!response.ok) throw new Error("Erreur lors du chargement du classement");
   return await response.json(); // format attendu : [{ userId, pseudo, score }]
 }
+
+
+
+
+// Récupère la capacité actuelle de l'entrepôt
+export async function fetchWarehouseCapacity(storeId) {
+  const response = await fetch(`${API_BASE_URL}/Warehouse/capacity/${storeId}`);
+  if (!response.ok) throw new Error("Impossible de récupérer la capacité");
+  return await response.json(); // { capacity: 100 } par ex
+}
+
+// Améliore l'entrepôt
+export async function upgradeWarehouse(storeId) {
+  const response = await fetch(`${API_BASE_URL}/Warehouse/upgrade/${storeId}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' }, // ← Peut-être inutile
+  });
+
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.message || "Erreur lors de l'amélioration de l'entrepôt");
+  }
+
+  return await response.json().catch(() => ({}));
+}
