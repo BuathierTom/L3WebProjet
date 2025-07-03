@@ -1,63 +1,66 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import '../../style/Formulaire/formulaire.css'
-import { registerUser } from '../../services/api' // à créer
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import '../../style/Formulaire/formulaire.css';
+import { registerUser, fetchStoreByUserId } from '../../services/api';
 
 export default function Formulaire() {
-  const [pseudo, setPseudo] = useState('')
-  const [magasin, setMagasin] = useState('')
-  const [loading, setLoading] = useState(false)
-  const navigate = useNavigate()
+  const [pseudo, setPseudo] = useState('');
+  const [magasin, setMagasin] = useState('');
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-  e.preventDefault()
+    e.preventDefault();
 
-  if (!pseudo.trim() || !magasin.trim()) {
-    alert('Veuillez entrer un pseudo et un nom de magasin')
-    return
-  }
+    if (!pseudo.trim() || !magasin.trim()) {
+      alert('Veuillez entrer un pseudo et un nom de magasin');
+      return;
+    }
 
-  setLoading(true)
-  try {
-    const result = await registerUser({ pseudo, storeName: magasin })
+    setLoading(true);
+    try {
+      const result = await registerUser({ pseudo, storeName: magasin });
+      const userId = result.userId || result.id;
+      localStorage.setItem('userId', userId);
 
-    // 🔐 Stocker userId et storeId dans le localStorage
-    localStorage.setItem('userId', result.userId)
-    localStorage.setItem('storeId', result.id)
+      // Récupère le storeId via l'userId
+      const store = await fetchStoreByUserId(userId);
+      const storeId = store.id;
+      localStorage.setItem('storeId', storeId);
 
-    console.log('Inscription réussie:', result)
-    navigate('/home')
-  } catch (error) {
-    alert(error.message || "Erreur lors de l'inscription")
-  } finally {
-    setLoading(false)
-  }
-}
-
+      navigate('/home');
+    } catch (error) {
+      alert(error.message || "Erreur lors de l'inscription");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="form-wrapper">
-      <h2 className="form-title">Inscription</h2>
-
-      <form className="form-container" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Entrez votre pseudo"
-          value={pseudo}
-          onChange={(e) => setPseudo(e.target.value)}
-          disabled={loading}
-        />
-        <input
-          type="text"
-          placeholder="Entrez le nom du magasin"
-          value={magasin}
-          onChange={(e) => setMagasin(e.target.value)}
-          disabled={loading}
-        />
-        <button type="submit" disabled={loading}>
-          {loading ? 'Chargement...' : 'Valider'}
-        </button>
-      </form>
+    <div className="inscription-background">
+      <div className="form-wrapper">
+        <h2 className="form-title">Inscription</h2>
+        <form className="form-container" onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Entrez votre pseudo"
+            value={pseudo}
+            onChange={(e) => setPseudo(e.target.value)}
+            disabled={loading}
+          />
+          <input
+            type="text"
+            placeholder="Entrez le nom du magasin"
+            value={magasin}
+            onChange={(e) => setMagasin(e.target.value)}
+            disabled={loading}
+          />
+          <button type="submit" disabled={loading}>
+            {loading ? 'Chargement...' : 'Valider'}
+          </button>
+        </form>
+      </div>
     </div>
-  )
+  );
 }
+

@@ -1,3 +1,16 @@
+/* Fond uniquement pour la page d'inscription */
+.inscription-background {
+  background-image: url('../../assets/images/Fond.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Formulaire */
 .form-wrapper {
   position: relative;
   display: flex;
@@ -44,13 +57,13 @@
   text-align: center;
 }
 
-/* Centrage global */
+/* Enlève les styles globaux sur body pour éviter que l’image s’applique partout */
 body, html {
   height: 100%;
   margin: 0;
 }
 
-body {
+.inscription-background {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -59,5 +72,4 @@ body {
   background-position: center;
   background-repeat: no-repeat;
   font-family: sans-serif;
-  min-height: 100vh;
 }
