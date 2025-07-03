@@ -39,6 +39,26 @@ namespace L3WebProjet.Business.Implementations
 
         public async Task<SectionDto> CreateSectionAsync(SectionCreateRequest request, CancellationToken cancellationToken = default)
         {
+            var existingSections = await _sectionRepository.GetByStoreIdAsync(request.StoreId, cancellationToken);
+            var sectionCount = existingSections.Count();
+
+            int cost = sectionCount switch
+            {
+                0 => 0,      // Première gratuite
+                1 => 100,
+                2 => 500,
+                _ => 1000
+            };
+
+            var resources = await _resourceRepository.GetByStoreIdAsync(request.StoreId, cancellationToken);
+            var money = resources.FirstOrDefault(r => r.Type == "Money");
+
+            if (money == null || money.Amount < cost)
+                throw new Exception("Not enough money to create a section");
+
+            money.Amount -= cost;
+            await _resourceRepository.UpdateAsync(money, cancellationToken);
+
             var section = new SectionDao
             {
                 Id = Guid.NewGuid(),
@@ -50,6 +70,7 @@ namespace L3WebProjet.Business.Implementations
             };
 
             await _sectionRepository.AddAsync(section, cancellationToken);
+
             return SectionDto.ToDto(section);
         }
 
