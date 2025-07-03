@@ -1,4 +1,5 @@
 using L3WebProjet.Business.Interfaces;
+using L3WebProjet.Common.DAO;
 using L3WebProjet.Common.DTO;
 using L3WebProjet.DataAccess.Interfaces;
 using L3WebProjet.Common.Request;
@@ -24,29 +25,31 @@ namespace L3WebProjet.Business.Implementations
 
         public async Task<IEnumerable<UserDto>> GetAllUsersAsync(CancellationToken cancellationToken = default)
         {
-            return await _userRepository.GetAllAsync(cancellationToken);
+            var daos = await _userRepository.GetAllAsync(cancellationToken);
+            return daos.Select(u => u.ToDto());
         }
 
         public async Task<UserDto?> GetUserByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await _userRepository.GetByIdAsync(id, cancellationToken);
+            var dao = await _userRepository.GetByIdAsync(id, cancellationToken);
+            return dao?.ToDto();
         }
 
         public async Task<UserDto> CreateUserAsync(UserCreateRequest request, CancellationToken cancellationToken = default)
         {
-            var user = new UserDto
+            var user = new UserDao
             {
                 Id = Guid.NewGuid(),
                 Pseudo = request.Pseudo
             };
 
             await _userRepository.AddAsync(user, cancellationToken);
-            return user;
+            return user.ToDto();
         }
 
         public async Task UpdateUserAsync(UserUpdateRequest request, CancellationToken cancellationToken = default)
         {
-            var user = new UserDto
+            var user = new UserDao
             {
                 Id = request.Id,
                 Pseudo = request.Pseudo
@@ -62,7 +65,7 @@ namespace L3WebProjet.Business.Implementations
 
         public async Task<UserDto> CreateUserWithStoreAsync(UserWithStoreCreateRequest request, CancellationToken cancellationToken = default)
         {
-            var user = new UserDto
+            var user = new UserDao
             {
                 Id = Guid.NewGuid(),
                 Pseudo = request.Pseudo
@@ -70,7 +73,7 @@ namespace L3WebProjet.Business.Implementations
 
             await _userRepository.AddAsync(user, cancellationToken);
 
-            var store = new StoreDto
+            var store = new StoreDao
             {
                 Id = Guid.NewGuid(),
                 Name = request.StoreName,
@@ -80,7 +83,7 @@ namespace L3WebProjet.Business.Implementations
 
             await _storeRepository.AddAsync(store, cancellationToken);
 
-            var warehouse = new WarehouseDto
+            var warehouse = new WarehouseDao
             {
                 Id = Guid.NewGuid(),
                 StoreId = store.Id,
@@ -88,9 +91,9 @@ namespace L3WebProjet.Business.Implementations
             };
             await _warehouseRepository.AddAsync(warehouse, cancellationToken);
 
-            var startingResources = new List<ResourceDto>
+            var startingResources = new List<ResourceDao>
             {
-                new ResourceDto { Id = Guid.NewGuid(), Type = "Money", Amount = 100, StoreId = store.Id }
+                new ResourceDao { Id = Guid.NewGuid(), Type = "Money", Amount = 100, StoreId = store.Id }
             };
 
             foreach (var resource in startingResources)
@@ -98,7 +101,7 @@ namespace L3WebProjet.Business.Implementations
                 await _resourceRepository.AddAsync(resource, cancellationToken);
             }
 
-            var defaultSection = new SectionDto
+            var defaultSection = new SectionDao
             {
                 Id = Guid.NewGuid(),
                 Type = "Comédie",
@@ -110,8 +113,9 @@ namespace L3WebProjet.Business.Implementations
 
             await _sectionRepository.AddAsync(defaultSection, cancellationToken);
 
-            return user;
+            return user.ToDto();
         }
+
         
     }
 }

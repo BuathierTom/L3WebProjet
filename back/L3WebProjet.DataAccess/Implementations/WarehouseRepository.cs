@@ -1,3 +1,4 @@
+using L3WebProjet.Common.DAO;
 using L3WebProjet.Common.DTO;
 using L3WebProjet.DataAccess.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -13,26 +14,26 @@ public class WarehouseRepository : IWarehouseRepository
         _context = context;
     }
 
-    public async Task<WarehouseDto?> GetByStoreIdAsync(Guid storeId, CancellationToken cancellationToken)
+    public async Task<WarehouseDao?> GetByStoreIdAsync(Guid storeId, CancellationToken cancellationToken)
     {
         return await _context.Warehouses
             .FirstOrDefaultAsync(w => w.StoreId == storeId, cancellationToken);
     }
 
-    public async Task<WarehouseDto> AddAsync(WarehouseDto dto, CancellationToken cancellationToken)
+    public async Task<WarehouseDao> AddAsync(WarehouseDao dao, CancellationToken cancellationToken)
     {
-        if (dto.Id == Guid.Empty)
-            dto.Id = Guid.NewGuid();
+        if (dao.Id == Guid.Empty)
+            dao.Id = Guid.NewGuid();
 
-        _context.Warehouses.Add(dto);
+        _context.Warehouses.Add(dao);
         await _context.SaveChangesAsync(cancellationToken);
 
-        return dto;
+        return dao;
     }
 
-    public async Task UpdateAsync(WarehouseDto dto, CancellationToken cancellationToken)
+    public async Task UpdateAsync(WarehouseDao dao, CancellationToken cancellationToken)
     {
-        _context.Warehouses.Update(dto);
+        _context.Warehouses.Update(dao);
         await _context.SaveChangesAsync(cancellationToken);
     }
 }
