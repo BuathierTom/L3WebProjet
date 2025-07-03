@@ -31,6 +31,7 @@ builder.Services.AddScoped<IStoreService, StoreService>();
 builder.Services.AddScoped<ISectionService, SectionService>();
 builder.Services.AddScoped<IResourceService, ResourceService>();
 builder.Services.AddScoped<IWarehouseService, WarehouseService>();
+builder.Services.AddScoped<ILeaderboardService, LeaderboardService>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IStoreRepository, StoreRepository>();
