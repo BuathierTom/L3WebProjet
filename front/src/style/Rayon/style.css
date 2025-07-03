@@ -2,20 +2,19 @@
   text-align: center;
   margin: 1rem;
   cursor: default;
-  background-color: #fff;
   padding: 1rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  width: 160px;
+  max-width: 160px;
 }
 
 .rayon-image {
   width: 128px;
+  height: 128px;
 }
 
 .rayon-label {
   font-family: monospace;
   margin: 0.5rem 0;
+  color: white;
 }
 
 .rayon-button {

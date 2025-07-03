@@ -50,6 +50,7 @@ const Magasin = () => {
         })
         .catch(err => console.error("Erreur refresh argent :", err));
     };
+    
 
     fetchSections(storeId)
       .then(sectionsData => {
@@ -83,6 +84,7 @@ const Magasin = () => {
               id={section.id}
               type={section.type.toLowerCase()}
               initialLevel={section.level}
+              upgradePrice={section.upgradePrice}
             />
           ))
         )}
